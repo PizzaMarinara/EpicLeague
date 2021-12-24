@@ -8,13 +8,13 @@ import dev.efantini.pauperarena.data.models.Card
 
 @Dao
 interface CardDao {
-    @Query("SELECT * FROM card")
+    @Query("SELECT * FROM Card")
     fun getAll(): List<Card>
 
-    @Query("SELECT * FROM card WHERE name LIKE :name ")
+    @Query("SELECT * FROM Card WHERE name LIKE :name ")
     fun getAllByExactName(name: String): List<Card>
 
-    @Query("SELECT * FROM card WHERE name LIKE '%' || :name || '%' ")
+    @Query("SELECT * FROM Card WHERE name LIKE '%' || :name || '%' ")
     fun getAllByName(name: String): List<Card>
 
     @Insert
@@ -22,4 +22,7 @@ interface CardDao {
 
     @Delete
     fun delete(element: Card)
+
+    @Query("DELETE FROM Card")
+    fun deleteAll()
 }

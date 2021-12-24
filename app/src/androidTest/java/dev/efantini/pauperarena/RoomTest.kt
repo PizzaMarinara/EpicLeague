@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dev.efantini.pauperarena.data.AppDatabase
+import dev.efantini.pauperarena.data.AbstractAppDatabase
 import dev.efantini.pauperarena.data.dao.CardDao
 import dev.efantini.pauperarena.data.dao.DeckCardRefDao
 import dev.efantini.pauperarena.data.dao.DeckDao
@@ -24,17 +24,17 @@ class RoomTest {
     private lateinit var deckDao: DeckDao
     private lateinit var cardDao: CardDao
     private lateinit var deckCardRefDao: DeckCardRefDao
-    private lateinit var db: AppDatabase
+    private lateinit var db: AbstractAppDatabase
 
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
-            context, AppDatabase::class.java
+            context, AbstractAppDatabase::class.java
         ).build()
-        deckDao = db.deckDao()
-        cardDao = db.cardDao()
-        deckCardRefDao = db.deckCardRefDao()
+        deckDao = db.getDeckDao()
+        cardDao = db.getCardDao()
+        deckCardRefDao = db.getDeckCardRefDao()
     }
 
     @After

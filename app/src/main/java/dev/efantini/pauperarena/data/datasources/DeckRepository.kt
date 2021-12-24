@@ -1,18 +1,7 @@
 package dev.efantini.pauperarena.data.datasources
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import dev.efantini.pauperarena.data.models.Deck
 
-class DeckRepository private constructor(
-    private val defaultDispatcher: CoroutineDispatcher
-) {
-    companion object {
-        @Volatile
-        private var INSTANCE: DeckRepository? = null
-        fun getInstance(
-            defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-        ): DeckRepository = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: DeckRepository(defaultDispatcher).also { INSTANCE = it }
-        }
-    }
+interface DeckRepository {
+    suspend fun getDecks(): List<Deck>
 }

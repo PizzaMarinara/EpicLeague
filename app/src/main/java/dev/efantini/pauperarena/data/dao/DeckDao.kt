@@ -10,20 +10,20 @@ import dev.efantini.pauperarena.data.models.DeckWithCards
 
 @Dao
 interface DeckDao {
-    @Query("SELECT * FROM deck")
+    @Query("SELECT * FROM Deck")
     fun getAll(): List<Deck>
 
     @Transaction
-    @Query("SELECT * FROM deck")
+    @Query("SELECT * FROM Deck")
     fun getAllWithCards(): List<DeckWithCards>
 
-    @Query("SELECT * FROM deck WHERE playerOwnerId IN (:playerIds)")
+    @Query("SELECT * FROM Deck WHERE playerOwnerId IN (:playerIds)")
     fun getAllByPlayer(playerIds: LongArray): List<Deck>
 
-    @Query("SELECT * FROM deck WHERE name LIKE :name ")
+    @Query("SELECT * FROM Deck WHERE name LIKE :name ")
     fun getAllByExactName(name: String): List<Deck>
 
-    @Query("SELECT * FROM deck WHERE name LIKE '%' || :name || '%' ")
+    @Query("SELECT * FROM Deck WHERE name LIKE '%' || :name || '%' ")
     fun getAllByName(name: String): List<Deck>
 
     @Insert
@@ -31,4 +31,7 @@ interface DeckDao {
 
     @Delete
     fun delete(element: Deck)
+
+    @Query("DELETE FROM Deck")
+    fun deleteAll()
 }
