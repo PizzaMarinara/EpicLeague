@@ -6,7 +6,7 @@ class ScryfallApiCardMapper {
     private fun map(cards: List<ScryfallApiCard>?): List<Card> {
         return cards?.map {
             Card(
-                cardId = it.id,
+                scryfallId = it.id,
                 oracleId = it.oracleID,
                 name = it.name,
                 image = it.imageUris.normal,

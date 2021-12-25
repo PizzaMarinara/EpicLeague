@@ -1,6 +1,7 @@
 buildscript {
     ext {
         composeVersion = '1.0.5'
+        objectboxVersion = '2.9.1'
         kotlinVersion = '1.5.31'
     }
     repositories {
@@ -10,6 +11,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath "io.objectbox:objectbox-gradle-plugin:$objectboxVersion"
 
     }
 }

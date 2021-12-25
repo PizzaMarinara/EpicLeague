@@ -1,0 +1,259 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6330499567154184673",
+      "lastPropertyId": "13:4433283254630189994",
+      "name": "Card",
+      "properties": [
+        {
+          "id": "1:4764466738670517538",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8190927469297757920",
+          "name": "scryfallId",
+          "type": 9
+        },
+        {
+          "id": "3:1630710663110892872",
+          "name": "oracleId",
+          "type": 9
+        },
+        {
+          "id": "4:3134769907121944351",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:2063761133097945407",
+          "name": "image",
+          "type": 9
+        },
+        {
+          "id": "6:3488152525130375317",
+          "name": "imageList",
+          "type": 9
+        },
+        {
+          "id": "7:8847418383355820962",
+          "name": "manaCost",
+          "type": 9
+        },
+        {
+          "id": "8:1268480253053207638",
+          "name": "cmc",
+          "type": 6,
+          "flags": 2
+        },
+        {
+          "id": "9:1941430102688778564",
+          "name": "typeLine",
+          "type": 9
+        },
+        {
+          "id": "10:7584828172731068036",
+          "name": "oracleText",
+          "type": 9
+        },
+        {
+          "id": "11:6061472386813611337",
+          "name": "colors",
+          "type": 9
+        },
+        {
+          "id": "12:1337585865036111262",
+          "name": "colorIdentity",
+          "type": 9
+        },
+        {
+          "id": "13:4433283254630189994",
+          "name": "keywords",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8129797609225415434",
+      "lastPropertyId": "3:4735000987346332846",
+      "name": "Deck",
+      "properties": [
+        {
+          "id": "1:1264032424550730607",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6494388829399504485",
+          "name": "playerOwnerId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "3:4735000987346332846",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8183661023262451628",
+      "lastPropertyId": "4:1587030920985612599",
+      "name": "Player",
+      "properties": [
+        {
+          "id": "1:8893116340166359274",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2768222153800884867",
+          "name": "firstName",
+          "type": 9
+        },
+        {
+          "id": "3:7876427478403602869",
+          "name": "lastName",
+          "type": 9
+        },
+        {
+          "id": "4:1587030920985612599",
+          "name": "permissions",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:3009293084382549791",
+      "lastPropertyId": "4:7472849603549431731",
+      "name": "Tournament",
+      "properties": [
+        {
+          "id": "1:3702228970233768040",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2061988033060052979",
+          "name": "pointsAssigned",
+          "type": 9
+        },
+        {
+          "id": "3:5011256124448548167",
+          "name": "date",
+          "type": 9
+        },
+        {
+          "id": "4:7472849603549431731",
+          "name": "seasonId",
+          "type": 6,
+          "flags": 2
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:4608958500443153412",
+          "name": "participants",
+          "targetId": "6:4286753030626160758"
+        },
+        {
+          "id": "2:1882314112688736561",
+          "name": "rounds",
+          "targetId": "7:7497100773699766839"
+        }
+      ]
+    },
+    {
+      "id": "5:8306765775698904139",
+      "lastPropertyId": "2:8559044089089928105",
+      "name": "TournamentMatch",
+      "properties": [
+        {
+          "id": "1:3010774558833637479",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8559044089089928105",
+          "name": "score",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:4286753030626160758",
+      "lastPropertyId": "4:5377207952071622644",
+      "name": "TournamentPlayer",
+      "properties": [
+        {
+          "id": "1:2899749888087363157",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4141952723474284084",
+          "name": "playerId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "3:7143833028256872281",
+          "name": "deckId",
+          "type": 6,
+          "flags": 4
+        },
+        {
+          "id": "4:5377207952071622644",
+          "name": "signedUpTournamentId",
+          "type": 6,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:7497100773699766839",
+      "lastPropertyId": "1:6117884748116701131",
+      "name": "TournamentRound",
+      "properties": [
+        {
+          "id": "1:6117884748116701131",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        }
+      ],
+      "relations": [
+        {
+          "id": "3:9222067120247565018",
+          "name": "matches",
+          "targetId": "5:8306765775698904139"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "7:7497100773699766839",
+  "lastIndexId": "0:0",
+  "lastRelationId": "3:9222067120247565018",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

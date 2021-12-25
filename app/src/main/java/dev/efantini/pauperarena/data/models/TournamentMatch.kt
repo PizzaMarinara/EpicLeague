@@ -1,13 +1,15 @@
 package dev.efantini.pauperarena.data.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
 
 @Entity
 data class TournamentMatch(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val score: Pair<Pair<TournamentPlayer, Int>, Pair<TournamentPlayer, Int>>,
+    @Id var id: Long = 0,
+    val score: String
+    // val score: Pair<Pair<TournamentPlayer, Int>, Pair<TournamentPlayer, Int>>,
 ) {
+    /*
     val players: List<TournamentPlayer>
         get() { return listOf(score.first.first, score.second.first) }
 
@@ -18,4 +20,5 @@ data class TournamentMatch(
             else -> null
         }
     }
+    */
 }

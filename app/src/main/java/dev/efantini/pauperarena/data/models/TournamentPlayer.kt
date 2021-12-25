@@ -1,16 +1,12 @@
 package dev.efantini.pauperarena.data.models
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.Relation
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
 
 @Entity
 data class TournamentPlayer(
-    @Embedded val player: Player,
-    @Relation(
-        parentColumn = "playerId",
-        entityColumn = "playerOwnerId"
-    )
-    val deck: Deck,
+    @Id var id: Long = 0,
+    val playerId: Long,
+    val deckId: Long,
     val signedUpTournamentId: Long
 )

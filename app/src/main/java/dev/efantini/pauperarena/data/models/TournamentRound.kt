@@ -1,10 +1,10 @@
 package dev.efantini.pauperarena.data.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
 
 @Entity
 data class TournamentRound(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @Id var id: Long = 0,
     val matches: List<TournamentMatch>
 )

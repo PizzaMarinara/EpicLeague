@@ -1,11 +1,12 @@
 package dev.efantini.pauperarena.data.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import io.objectbox.annotation.Entity
+import io.objectbox.annotation.Id
 
 @Entity
 class Card(
-    @PrimaryKey val cardId: String,
+    @Id var id: Long = 0,
+    val scryfallId: String,
     val oracleId: String,
     val name: String,
     val image: String? = null,

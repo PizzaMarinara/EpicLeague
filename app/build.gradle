@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'io.objectbox'
 }
 
 android {
@@ -62,12 +63,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
     implementation "androidx.activity:activity-compose:1.4.0"
     implementation "com.google.accompanist:accompanist-insets:0.10.0"
-
-    // Room
-    def room_version = "2.4.0"
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    testImplementation "androidx.room:room-testing:$room_version"
 
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:1.12.0"

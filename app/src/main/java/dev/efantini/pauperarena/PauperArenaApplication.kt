@@ -2,7 +2,7 @@ package dev.efantini.pauperarena
 
 import android.app.Application
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
-import dev.efantini.pauperarena.data.AppDatabase
+import dev.efantini.pauperarena.data.ObjectBox
 
 class PauperArenaApplication : Application() {
 
@@ -11,6 +11,6 @@ class PauperArenaApplication : Application() {
             return
         }
         super.onCreate()
-        AppDatabase.init(this)
+        ObjectBox.init(this)
     }
 }
