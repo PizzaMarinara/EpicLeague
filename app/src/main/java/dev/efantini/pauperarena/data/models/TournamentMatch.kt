@@ -14,4 +14,12 @@ data class TournamentMatch(
     lateinit var tournamentRound: ToOne<TournamentRound>
     lateinit var player1: ToOne<TournamentPlayer>
     lateinit var player2: ToOne<TournamentPlayer>
+
+    fun getWinner(): TournamentPlayer? {
+        return when {
+            player1Points > player2Points -> player1.target
+            player1Points < player2Points -> player2.target
+            else -> null
+        }
+    }
 }

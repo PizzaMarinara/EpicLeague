@@ -1,3 +1,4 @@
 /build
 /objectbox-models/default.json.bak
 /objectbox-jni-windows-x64.dll
+/objectbox-example/*
