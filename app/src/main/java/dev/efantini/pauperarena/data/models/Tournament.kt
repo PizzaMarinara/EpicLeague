@@ -1,17 +1,21 @@
 package dev.efantini.pauperarena.data.models
 
+import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToMany
 
 @Entity
 data class Tournament(
     @Id var id: Long = 0,
-    val participants: List<TournamentPlayer>,
-    val rounds: List<TournamentRound>,
-    val pointsAssigned: String,
-    val date: String,
-    val seasonId: Long?
+    var pointsAssigned: String = "",
+    var date: String = ""
 ) {
+    @Backlink(to = "tournament")
+    lateinit var rounds: ToMany<TournamentRound>
+    @Backlink(to = "tournament")
+    lateinit var players: ToMany<TournamentPlayer>
+
     fun convertPointsToString(points: ArrayList<Int>): String {
         return points.joinToString(separator = "-")
     }

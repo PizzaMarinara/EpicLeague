@@ -2,23 +2,16 @@ package dev.efantini.pauperarena.data.models
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToOne
 
 @Entity
 data class TournamentMatch(
-    @Id var id: Long = 0,
-    val score: String
-    // val score: Pair<Pair<TournamentPlayer, Int>, Pair<TournamentPlayer, Int>>,
+    @Id
+    var id: Long = 0,
+    var player1Points: Int = 0,
+    var player2Points: Int = 0
 ) {
-    /*
-    val players: List<TournamentPlayer>
-        get() { return listOf(score.first.first, score.second.first) }
-
-    fun getWinner(): TournamentPlayer? {
-        return when {
-            score.first.second > score.second.second -> score.first.first
-            score.first.second < score.second.second -> score.second.first
-            else -> null
-        }
-    }
-    */
+    lateinit var tournamentRound: ToOne<TournamentRound>
+    lateinit var player1: ToOne<TournamentPlayer>
+    lateinit var player2: ToOne<TournamentPlayer>
 }

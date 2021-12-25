@@ -1,7 +1,7 @@
 buildscript {
     ext {
         composeVersion = '1.0.5'
-        objectboxVersion = '2.9.1'
+        objectboxVersion = '3.1.0'
         kotlinVersion = '1.5.31'
     }
     repositories {
