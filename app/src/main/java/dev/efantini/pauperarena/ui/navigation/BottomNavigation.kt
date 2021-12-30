@@ -15,7 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.efantini.pauperarena.ui.theme.Purple500
 
 @Composable
-fun BottomNavigation(navController: NavController) {
+fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.PlayersList,
@@ -32,7 +32,12 @@ fun BottomNavigation(navController: NavController) {
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.title) },
-                label = { Text(text = item.title) },
+                label = {
+                    Text(
+                        text = item.title,
+                        maxLines = 1
+                    )
+                },
                 selectedContentColor = Color.White,
                 unselectedContentColor = Color.White.copy(0.4f),
                 alwaysShowLabel = true,

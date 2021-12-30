@@ -3,7 +3,6 @@ package dev.efantini.pauperarena.data.datasources
 import dev.efantini.pauperarena.data.ObjectBox
 import dev.efantini.pauperarena.data.models.Player
 import dev.efantini.pauperarena.data.models.Player_
-import io.objectbox.query.OrderFlags
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +15,8 @@ class PlayerRepository private constructor(
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(Player::class.java)
                 .query()
-                .order(Player_.firstName, OrderFlags.DESCENDING)
+                .order(Player_.lastName)
+                .order(Player_.firstName)
                 .build().find()
         }
     }

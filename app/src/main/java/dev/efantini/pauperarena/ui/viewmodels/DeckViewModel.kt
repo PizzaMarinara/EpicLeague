@@ -5,13 +5,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.efantini.pauperarena.data.datasources.DeckRepository
 import dev.efantini.pauperarena.data.models.Deck
 import dev.efantini.pauperarena.ui.states.DeckItemUiState
 import dev.efantini.pauperarena.ui.states.DeckListUiState
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
-class DeckViewModel(private val deckRepository: DeckRepository) : ViewModel() {
+@HiltViewModel
+class DeckViewModel @Inject constructor() : ViewModel() {
+
+    private val deckRepository = DeckRepository.getInstance()
 
     init {
         getDecks()
