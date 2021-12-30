@@ -1,6 +1,5 @@
 package dev.efantini.pauperarena
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import dev.efantini.pauperarena.data.models.Deck
 import dev.efantini.pauperarena.data.models.Player
 import dev.efantini.pauperarena.data.models.Player_
@@ -9,54 +8,51 @@ import dev.efantini.pauperarena.data.models.TournamentMatch
 import dev.efantini.pauperarena.data.models.TournamentPlayer
 import dev.efantini.pauperarena.data.models.TournamentRound
 import io.objectbox.query.OrderFlags
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.Rule
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class ObjectBoxTests : AbstractObjectBoxTest() {
 
-    @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
-    @get:Rule
-    var coroutinesTestRule = CoroutineTestRule()
+    @Before
+    override fun setUp() {
+        super.setUp()
+        Dispatchers.setMain(mainThreadSurrogate)
+    }
 
-    class CoroutineTestRule(
-        val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
-    ) : TestWatcher() {
-
-        override fun starting(description: Description?) {
-            super.starting(description)
-            Dispatchers.setMain(testDispatcher)
-        }
-
-        override fun finished(description: Description?) {
-            super.finished(description)
-            Dispatchers.resetMain()
-            testDispatcher.cleanupTestCoroutines()
-        }
+    @After
+    override fun tearDown() {
+        super.tearDown()
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
     @Test
     fun `insert player in boxstore`() {
-        val playerBox = store.boxFor(Player::class.java)
-        playerBox.put(Player(firstName = "Enrico", lastName = "Fantini"))
-        playerBox.put(Player(firstName = "Lorenzo", lastName = "Lanzi"))
-        playerBox.put(Player(firstName = "Enrico", lastName = "Casanova"))
+        runTest {
+            val playerBox = store.boxFor(Player::class.java)
+            playerBox.put(Player(firstName = "Enrico", lastName = "Fantini"))
+            playerBox.put(Player(firstName = "Lorenzo", lastName = "Lanzi"))
+            playerBox.put(Player(firstName = "Enrico", lastName = "Casanova"))
 
-        val playerz = playerBox.query()
-            .order(Player_.firstName, OrderFlags.DESCENDING)
-            .order(Player_.lastName, OrderFlags.DESCENDING)
-            .build().find()
+            val playerz = playerBox.query()
+                .order(Player_.firstName, OrderFlags.DESCENDING)
+                .order(Player_.lastName, OrderFlags.DESCENDING)
+                .build().find()
 
-        assert(playerz.size == 3)
+            assert(playerz.size == 3)
+        }
     }
 
     @Test
