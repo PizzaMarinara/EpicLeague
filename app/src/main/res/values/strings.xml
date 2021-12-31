@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PauperArena</string>
+
+    <string name="add_player">Add Player</string>
+    <string name="player_firstName">Name</string>
+    <string name="player_lastName">Surname</string>
 </resources>

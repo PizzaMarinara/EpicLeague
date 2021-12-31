@@ -27,20 +27,6 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
 
     private fun getPlayers() {
         viewModelScope.launch {
-            // TODO: remove the default data
-            if (playerRepository.getItems().isEmpty()) {
-                playerRepository.putItems(
-                    listOf(
-                        Player(firstName = "Enrico", lastName = "Fantini"),
-                        Player(firstName = "Enrico", lastName = "Canducci"),
-                        Player(firstName = "Lorenzo", lastName = "Lanzi"),
-                        Player(firstName = "Enrico", lastName = "Casanova"),
-                        Player(firstName = "Luca", lastName = "De Guidi"),
-                        Player(firstName = "Luca", lastName = "Mosconi")
-
-                    )
-                )
-            }
             val items = playerRepository.getItems()
             playersListContentUiState = playersListContentUiState.copy(
                 playerItems = items.map {
@@ -53,12 +39,14 @@ class PlayerViewModel @Inject constructor() : ViewModel() {
     fun putPlayers(items: List<Player>) {
         viewModelScope.launch {
             playerRepository.putItems(items)
+            getPlayers()
         }
     }
 
     fun deletePlayers(items: List<Player>) {
         viewModelScope.launch {
             playerRepository.deleteItems(items)
+            getPlayers()
         }
     }
 }

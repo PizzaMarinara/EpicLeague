@@ -8,11 +8,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.efantini.pauperarena.ui.theme.Blue40
+
+val BOTTOMNAVBAR_HEIGHT = 56.dp
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -23,9 +23,7 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationItem.Sync
     )
     BottomNavigation(
-        backgroundColor = Blue40,
-        contentColor = Color.White,
-        modifier = Modifier.height(56.dp)
+        modifier = Modifier.height(BOTTOMNAVBAR_HEIGHT)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -38,8 +36,6 @@ fun BottomNavigationBar(navController: NavController) {
                         maxLines = 1
                     )
                 },
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.White.copy(0.4f),
                 alwaysShowLabel = true,
                 selected = currentRoute == item.route,
                 onClick = {
