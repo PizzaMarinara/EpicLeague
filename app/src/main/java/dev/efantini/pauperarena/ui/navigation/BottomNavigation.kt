@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import dev.efantini.pauperarena.ui.theme.Purple500
+import dev.efantini.pauperarena.ui.theme.Blue40
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
@@ -23,7 +23,7 @@ fun BottomNavigationBar(navController: NavController) {
         NavigationItem.Sync
     )
     BottomNavigation(
-        backgroundColor = Purple500,
+        backgroundColor = Blue40,
         contentColor = Color.White,
         modifier = Modifier.height(56.dp)
     ) {
