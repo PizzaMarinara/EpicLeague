@@ -5,17 +5,31 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = Yellow80,
-    primaryVariant = Red80,
-    secondary = Blue80
+    primary = Dark4,
+    primaryVariant = Dark3,
+    secondary = Dark2,
+    background = Dark1,
+    surface = Dark3,
+    onPrimary = White,
+    onSecondary = White,
+    onBackground = White,
+    onSurface = White,
+
 )
 
 private val LightColorPalette = lightColors(
-    primary = Yellow40,
-    primaryVariant = Red40,
-    secondary = Blue40
+    primary = Light4,
+    primaryVariant = Light3,
+    secondary = Light2,
+    background = Light1,
+    surface = Light3,
+    onPrimary = Black,
+    onSecondary = Black,
+    onBackground = Black,
+    onSurface = Black,
 )
 
 @Composable
@@ -24,6 +38,17 @@ fun PauperArenaTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
         DarkColorPalette
     } else {
         LightColorPalette
+    }
+
+    val systemUiController = rememberSystemUiController()
+    if (darkTheme) {
+        systemUiController.setSystemBarsColor(
+            color = Dark3
+        )
+    } else {
+        systemUiController.setSystemBarsColor(
+            color = Light3
+        )
     }
 
     MaterialTheme(
