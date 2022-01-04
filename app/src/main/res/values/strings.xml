@@ -4,4 +4,7 @@
     <string name="add_player">Add Player</string>
     <string name="player_firstName">Name</string>
     <string name="player_lastName">Surname</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

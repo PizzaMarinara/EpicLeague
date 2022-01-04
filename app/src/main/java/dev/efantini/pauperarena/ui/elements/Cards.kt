@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import dev.efantini.pauperarena.ui.states.PlayerItemUiState
 
 @Composable
@@ -35,6 +38,27 @@ fun PlayerCard(
                     text = item.player.fullName,
                     style = MaterialTheme.typography.h6.copy(color = Color.Black)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun DialogCard(
+    onDismissRequest: () -> Unit,
+    properties: DialogProperties = DialogProperties(),
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = properties
+    ) {
+        Card(
+            elevation = 4.dp,
+            shape = RoundedCornerShape(15.dp)
+        ) {
+            Surface(modifier = Modifier.padding(15.dp)) {
+                content()
             }
         }
     }
