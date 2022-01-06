@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
 
@@ -16,7 +17,7 @@ import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.Home,
-        NavigationItem.PlayersList,
+        NavigationItem.Player,
         NavigationItem.Tournaments,
         NavigationItem.Sync
     )
@@ -24,7 +25,7 @@ fun BottomNavigationBar(navController: NavController) {
         modifier = Modifier.height(BOTTOMNAVBAR_HEIGHT)
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+        val currentRoute = navBackStackEntry?.destination
         items.forEach { item ->
             BottomNavigationItem(
                 icon = { Icon(item.icon, contentDescription = item.title) },
@@ -35,7 +36,7 @@ fun BottomNavigationBar(navController: NavController) {
                     )
                 },
                 alwaysShowLabel = true,
-                selected = currentRoute == item.route,
+                selected = currentRoute?.hierarchy?.any { it.route == item.fullRoute } == true,
                 onClick = {
                     navController.navigate(item.route) {
                         navController.graph.startDestinationRoute?.let { route ->

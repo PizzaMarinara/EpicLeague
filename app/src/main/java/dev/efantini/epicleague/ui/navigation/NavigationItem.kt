@@ -7,6 +7,8 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.ui.graphics.vector.ImageVector
 
+const val ROOT_ROUTE = "root"
+
 sealed class NavigationItem(
     var route: String,
     val fullRoute: String,
@@ -16,11 +18,23 @@ sealed class NavigationItem(
     object Home : NavigationItem(
         "home", "home", Icons.Rounded.Home, "Home"
     )
-    object PlayersList : NavigationItem(
-        "playerslist", "playerslist", Icons.Rounded.Person, "PlayersList"
+    object Player : NavigationItem(
+        "player",
+        "player",
+        Icons.Rounded.Person,
+        "Player"
+    )
+    object PlayerList : NavigationItem(
+        "player/playerlist",
+        "player/playerlist",
+        Icons.Rounded.Person,
+        "PlayerList"
     )
     object PlayerDetail : NavigationItem(
-        "playerdetail", "playerdetail/{playerId}", Icons.Rounded.Person, "PlayerDetail"
+        "player/playerdetail",
+        "player/playerdetail/{playerId}",
+        Icons.Rounded.Person,
+        "PlayerDetail"
     )
     object Tournaments : NavigationItem(
         "tournaments", "tournaments", Icons.Rounded.List, "Tournaments"
