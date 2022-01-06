@@ -9,16 +9,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.efantini.epicleague.data.datasources.PlayerRepository
 import dev.efantini.epicleague.data.models.Player
 import dev.efantini.epicleague.ui.states.PlayerItemUiState
-import dev.efantini.epicleague.ui.states.PlayersListUiState
+import dev.efantini.epicleague.ui.states.PlayerListUiState
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class PlayersViewModel @Inject constructor() : ViewModel() {
+class PlayerListViewModel @Inject constructor() : ViewModel() {
 
     private val playerRepository = PlayerRepository.getInstance()
 
-    var playersListContentUiState by mutableStateOf(PlayersListUiState())
+    var playerListContentUiState by mutableStateOf(PlayerListUiState())
         private set
 
     init {
@@ -28,7 +28,7 @@ class PlayersViewModel @Inject constructor() : ViewModel() {
     private fun getPlayers() {
         viewModelScope.launch {
             val items = playerRepository.getItems()
-            playersListContentUiState = playersListContentUiState.copy(
+            playerListContentUiState = playerListContentUiState.copy(
                 playerItems = items.map {
                     PlayerItemUiState(player = it)
                 }

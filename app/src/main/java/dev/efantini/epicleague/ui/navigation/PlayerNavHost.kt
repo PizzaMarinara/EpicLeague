@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import dev.efantini.epicleague.ui.elements.PlayerDetailContent
-import dev.efantini.epicleague.ui.elements.PlayersListContent
+import dev.efantini.epicleague.ui.elements.PlayerListContent
 
 fun NavGraphBuilder.playerNavHost(navController: NavController) {
     navigation(
@@ -15,7 +15,7 @@ fun NavGraphBuilder.playerNavHost(navController: NavController) {
         route = NavigationItem.Player.route
     ) {
         composable(NavigationItem.PlayerList.fullRoute) {
-            PlayersListContent(navController = navController)
+            PlayerListContent(navController = navController)
         }
         composable(
             NavigationItem.PlayerDetail.fullRoute,

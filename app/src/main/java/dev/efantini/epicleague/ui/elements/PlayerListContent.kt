@@ -40,12 +40,12 @@ import dev.efantini.epicleague.data.models.Player
 import dev.efantini.epicleague.ui.navigation.NavigationItem
 import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
 import dev.efantini.epicleague.ui.theme.DEFAULT_SIDE_PADDING
-import dev.efantini.epicleague.ui.viewmodels.PlayersViewModel
+import dev.efantini.epicleague.ui.viewmodels.PlayerListViewModel
 
 @Preview
 @Composable
-fun PlayersListContent(
-    playersViewModel: PlayersViewModel = hiltViewModel(),
+fun PlayerListContent(
+    playerListViewModel: PlayerListViewModel = hiltViewModel(),
     navController: NavController = rememberNavController()
 ) {
 
@@ -81,7 +81,7 @@ fun PlayersListContent(
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                    items(playersViewModel.playersListContentUiState.playerItems) {
+                    items(playerListViewModel.playerListContentUiState.playerItems) {
                         Box(
                             Modifier.clickable(onClick = {
                                 navController.navigate(
@@ -126,7 +126,7 @@ fun PlayersListContent(
                             Button(
                                 onClick = {
                                     isEditing = false
-                                    playersViewModel.putPlayers(
+                                    playerListViewModel.putPlayers(
                                         listOf(
                                             Player(
                                                 firstName = firstNameText.trim(),
