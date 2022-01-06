@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.PauperArena" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.EpicLeague" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/light4</item>
         <item name="colorPrimaryVariant">@color/light3</item>
@@ -14,19 +14,19 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.PauperArena.Starting" parent="Theme.SplashScreen">
+    <style name="Theme.EpicLeague.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/dark2</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="windowSplashScreenAnimationDuration">200</item>
-        <item name="postSplashScreenTheme">@style/Theme.PauperArena</item>
+        <item name="postSplashScreenTheme">@style/Theme.EpicLeague</item>
     </style>
 
-    <style name="Theme.PauperArena.NoActionBar">
+    <style name="Theme.EpicLeague.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.PauperArena.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.EpicLeague.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.PauperArena.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.EpicLeague.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

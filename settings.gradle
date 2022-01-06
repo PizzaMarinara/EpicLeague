@@ -5,5 +5,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "PauperArena"
+rootProject.name = "EpicLeague"
 include ':app'

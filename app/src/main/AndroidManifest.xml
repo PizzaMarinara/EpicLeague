@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="dev.efantini.pauperarena">
+    package="dev.efantini.epicleague">
 
     <application
-        android:name=".PauperArenaApplication"
+        android:name=".EpicLeagueApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PauperArena.Starting"
+        android:theme="@style/Theme.EpicLeague.Starting"
         android:fullBackupOnly="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PauperArena.NoActionBar">
+            android:theme="@style/Theme.EpicLeague.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PauperArena</string>
+    <string name="app_name">EpicLeague</string>
 
     <string name="add_player">Add Player</string>
     <string name="player_firstName">Name</string>
