@@ -10,11 +10,11 @@ import dev.efantini.epicleague.data.datasources.PlayerRepository
 import dev.efantini.epicleague.data.models.Player
 import dev.efantini.epicleague.ui.states.PlayerItemUiState
 import dev.efantini.epicleague.ui.states.PlayerListUiState
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class PlayerViewModel @Inject constructor() : ViewModel() {
+class PlayersViewModel @Inject constructor() : ViewModel() {
 
     private val playerRepository = PlayerRepository.getInstance()
 

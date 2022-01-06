@@ -33,6 +33,16 @@ class PlayerRepository private constructor(
         }
     }
 
+    suspend fun getPlayerById(playerId: Long): Player? {
+        return withContext(defaultDispatcher) {
+            ObjectBox.get().boxFor(Player::class.java)
+                .query(Player_.id.equal(playerId))
+                .order(Player_.lastName)
+                .order(Player_.firstName)
+                .build().findFirst()
+        }
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: PlayerRepository? = null

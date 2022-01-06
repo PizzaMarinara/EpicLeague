@@ -33,6 +33,15 @@ class DeckRepository private constructor(
         }
     }
 
+    suspend fun getDecksForPlayer(playerId: Long): List<Deck> {
+        return withContext(defaultDispatcher) {
+            ObjectBox.get().boxFor(Deck::class.java)
+                .query(Deck_.playerId.equal(playerId))
+                .order(Deck_.name, OrderFlags.DESCENDING)
+                .build().find()
+        }
+    }
+
     companion object {
         @Volatile
         private var INSTANCE: DeckRepository? = null

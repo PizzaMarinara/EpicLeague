@@ -1,5 +1,7 @@
 package dev.efantini.epicleague.ui.elements
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -31,15 +33,21 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import dev.efantini.epicleague.R
 import dev.efantini.epicleague.data.models.Player
+import dev.efantini.epicleague.ui.navigation.NavigationItem
 import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
 import dev.efantini.epicleague.ui.theme.DEFAULT_SIDE_PADDING
-import dev.efantini.epicleague.ui.viewmodels.PlayerViewModel
+import dev.efantini.epicleague.ui.viewmodels.PlayersViewModel
 
 @Preview
 @Composable
-fun PlayersListContent(playerViewModel: PlayerViewModel = hiltViewModel()) {
+fun PlayersListContent(
+    playersViewModel: PlayersViewModel = hiltViewModel(),
+    navController: NavController = rememberNavController()
+) {
 
     var isEditing by rememberSaveable { mutableStateOf(false) }
     Scaffold(
@@ -73,8 +81,17 @@ fun PlayersListContent(playerViewModel: PlayerViewModel = hiltViewModel()) {
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                    items(playerViewModel.playersListContentUiState.playerItems) {
-                        PlayerCard(it)
+                    items(playersViewModel.playersListContentUiState.playerItems) {
+                        Box(
+                            Modifier.clickable(onClick = {
+                                navController.navigate(
+                                    NavigationItem.PlayerDetail.route +
+                                        "/" + it.player.id.toString()
+                                )
+                            })
+                        ) {
+                            PlayerCard(it)
+                        }
                     }
                     item {
                         Spacer(modifier = Modifier.height(56.dp))
@@ -109,7 +126,7 @@ fun PlayersListContent(playerViewModel: PlayerViewModel = hiltViewModel()) {
                             Button(
                                 onClick = {
                                     isEditing = false
-                                    playerViewModel.putPlayers(
+                                    playersViewModel.putPlayers(
                                         listOf(
                                             Player(
                                                 firstName = firstNameText.trim(),
