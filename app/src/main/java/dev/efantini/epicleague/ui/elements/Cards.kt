@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -19,21 +18,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import dev.efantini.epicleague.ui.states.PlayerItemUiState
+import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_HEIGHT
+import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_SHAPE
+import dev.efantini.epicleague.ui.theme.Dark4
+import dev.efantini.epicleague.ui.theme.Light4
 
 @Composable
 fun PlayerCard(
     item: PlayerItemUiState,
 ) {
+    val isLightTheme = MaterialTheme.colors.isLight
     Card(
-        elevation = 4.dp,
-        shape = RoundedCornerShape(15.dp)
+        elevation = DEFAULT_CARD_HEIGHT,
+        shape = DEFAULT_CARD_SHAPE,
+        backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(Modifier.width(16.dp))
-            Column(Modifier.padding(top = 0.dp, bottom = 0.dp)) {
+            Spacer(Modifier.width(15.dp))
+            Column(Modifier.padding(top = 5.dp, bottom = 5.dp)) {
                 Text(
                     text = item.player.fullName,
                     style = MaterialTheme.typography.h6.copy(color = Color.Black)
@@ -54,8 +59,8 @@ fun DialogCard(
         properties = properties
     ) {
         Card(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(15.dp)
+            elevation = DEFAULT_CARD_HEIGHT,
+            shape = DEFAULT_CARD_SHAPE
         ) {
             Surface(modifier = Modifier.padding(15.dp)) {
                 content()

@@ -8,11 +8,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-
-val BOTTOMNAVBAR_HEIGHT = 56.dp
+import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {

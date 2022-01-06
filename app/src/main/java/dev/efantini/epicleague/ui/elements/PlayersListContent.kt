@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,7 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.efantini.epicleague.R
 import dev.efantini.epicleague.data.models.Player
-import dev.efantini.epicleague.ui.navigation.BOTTOMNAVBAR_HEIGHT
+import dev.efantini.epicleague.ui.theme.BOTTOMNAVBAR_HEIGHT
+import dev.efantini.epicleague.ui.theme.DEFAULT_SIDE_PADDING
 import dev.efantini.epicleague.ui.viewmodels.PlayerViewModel
 
 @Preview
@@ -66,12 +68,17 @@ fun PlayersListContent(playerViewModel: PlayerViewModel = hiltViewModel()) {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                items(playerViewModel.playersListContentUiState.playerItems) {
-                    PlayerCard(it)
-                }
-                item {
-                    Spacer(modifier = Modifier.height(56.dp))
+            Surface(
+                modifier = Modifier
+                    .padding(DEFAULT_SIDE_PADDING)
+            ) {
+                LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                    items(playerViewModel.playersListContentUiState.playerItems) {
+                        PlayerCard(it)
+                    }
+                    item {
+                        Spacer(modifier = Modifier.height(56.dp))
+                    }
                 }
             }
             if (isEditing) {
