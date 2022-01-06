@@ -21,6 +21,7 @@ import dev.efantini.epicleague.ui.states.PlayerItemUiState
 import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_HEIGHT
 import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_SHAPE
 import dev.efantini.epicleague.ui.theme.Dark4
+import dev.efantini.epicleague.ui.theme.KarlaFontFamily
 import dev.efantini.epicleague.ui.theme.Light4
 
 @Composable
@@ -41,7 +42,8 @@ fun PlayerCard(
             Column(Modifier.padding(top = 5.dp, bottom = 5.dp)) {
                 Text(
                     text = item.player.fullName,
-                    style = MaterialTheme.typography.h6.copy(color = Color.Black)
+                    style = MaterialTheme.typography.h6.copy(color = Color.Black),
+                    fontFamily = KarlaFontFamily
                 )
             }
         }
