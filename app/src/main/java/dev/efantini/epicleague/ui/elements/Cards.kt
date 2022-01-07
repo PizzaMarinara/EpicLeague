@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import dev.efantini.epicleague.ui.states.DeckItemUiState
 import dev.efantini.epicleague.ui.states.PlayerItemUiState
 import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_HEIGHT
 import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_SHAPE
@@ -42,6 +43,32 @@ fun PlayerCard(
             Column(Modifier.padding(top = 5.dp, bottom = 5.dp)) {
                 Text(
                     text = item.player.fullName,
+                    style = MaterialTheme.typography.h6.copy(color = Color.Black),
+                    fontFamily = KarlaFontFamily
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DeckCard(
+    item: DeckItemUiState,
+) {
+    val isLightTheme = MaterialTheme.colors.isLight
+    Card(
+        elevation = DEFAULT_CARD_HEIGHT,
+        shape = DEFAULT_CARD_SHAPE,
+        backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(Modifier.width(15.dp))
+            Column(Modifier.padding(top = 5.dp, bottom = 5.dp)) {
+                Text(
+                    text = item.deck.name,
                     style = MaterialTheme.typography.h6.copy(color = Color.Black),
                     fontFamily = KarlaFontFamily
                 )

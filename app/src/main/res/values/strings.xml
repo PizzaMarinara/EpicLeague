@@ -5,6 +5,7 @@
     <string name="add">Add</string>
     <string name="player_firstName">Name</string>
     <string name="player_lastName">Surname</string>
+    <string name="deck_name">Deck name</string>
 
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>

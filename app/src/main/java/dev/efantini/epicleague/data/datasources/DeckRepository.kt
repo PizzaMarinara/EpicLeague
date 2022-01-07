@@ -37,7 +37,7 @@ class DeckRepository private constructor(
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(Deck::class.java)
                 .query(Deck_.playerId.equal(playerId))
-                .order(Deck_.name, OrderFlags.DESCENDING)
+                .order(Deck_.name)
                 .build().find()
         }
     }
