@@ -33,10 +33,10 @@ class PlayerRepository private constructor(
         }
     }
 
-    suspend fun getPlayerById(playerId: Long): Player? {
+    override suspend fun getElementById(id: Long): Player? {
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(Player::class.java)
-                .query(Player_.id.equal(playerId))
+                .query(Player_.id.equal(id))
                 .order(Player_.lastName)
                 .order(Player_.firstName)
                 .build().findFirst()

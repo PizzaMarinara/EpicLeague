@@ -17,10 +17,11 @@ fun EpicLeagueNavHost(
         composable(NavigationItem.Home.fullRoute) {
             Text(text = "Home")
         }
+
         playerNavHost(navController = navController)
-        composable(NavigationItem.Tournaments.fullRoute) {
-            Text(text = "Tournaments")
-        }
+
+        tournamentNavHost(navController = navController)
+
         composable(NavigationItem.Sync.fullRoute) {
             Text(text = "Sync")
         }

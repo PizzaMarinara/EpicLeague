@@ -18,7 +18,7 @@ fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
         NavigationItem.Home,
         NavigationItem.Player,
-        NavigationItem.Tournaments,
+        NavigationItem.Tournament,
         NavigationItem.Sync
     )
     BottomNavigation(

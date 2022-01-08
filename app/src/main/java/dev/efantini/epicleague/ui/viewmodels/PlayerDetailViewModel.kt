@@ -32,7 +32,7 @@ class PlayerDetailViewModel @Inject constructor(
         viewModelScope.launch {
             playerId?.let {
                 playerDetailContentUiState = playerDetailContentUiState.copy(
-                    player = playerRepository.getPlayerById(playerId),
+                    player = playerRepository.getElementById(playerId),
                     decks = deckRepository.getDecksForPlayer(playerId).map { DeckItemUiState(it) }
                 )
             }

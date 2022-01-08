@@ -2,6 +2,7 @@ package dev.efantini.epicleague.data.datasources
 
 import dev.efantini.epicleague.data.ObjectBox
 import dev.efantini.epicleague.data.models.TournamentMatch
+import dev.efantini.epicleague.data.models.TournamentMatch_
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,6 +28,14 @@ class TournamentMatchRepository private constructor(
     override suspend fun deleteItems(items: List<TournamentMatch>) {
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(TournamentMatch::class.java).remove(items)
+        }
+    }
+
+    override suspend fun getElementById(id: Long): TournamentMatch? {
+        return withContext(defaultDispatcher) {
+            ObjectBox.get().boxFor(TournamentMatch::class.java)
+                .query(TournamentMatch_.id.equal(id))
+                .build().findFirst()
         }
     }
 

@@ -36,8 +36,23 @@ sealed class NavigationItem(
         Icons.Rounded.Person,
         "PlayerDetail"
     )
-    object Tournaments : NavigationItem(
-        "tournaments", "tournaments", Icons.Rounded.List, "Tournaments"
+    object Tournament : NavigationItem(
+        "tournament",
+        "tournament",
+        Icons.Rounded.List,
+        "Tournament"
+    )
+    object TournamentList : NavigationItem(
+        "tournament/tournamentlist",
+        "tournament/tournamentlist",
+        Icons.Rounded.List,
+        "TournamentList"
+    )
+    object TournamentDetail : NavigationItem(
+        "tournament/tournamentdetail",
+        "tournament/tournamentdetail/{tournamentId}",
+        Icons.Rounded.List,
+        "TournamentDetail"
     )
     object Sync : NavigationItem(
         "sync", "sync", Icons.Rounded.Send, "Sync"

@@ -33,6 +33,15 @@ class DeckRepository private constructor(
         }
     }
 
+    override suspend fun getElementById(id: Long): Deck? {
+        return withContext(defaultDispatcher) {
+            ObjectBox.get().boxFor(Deck::class.java)
+                .query(Deck_.id.equal(id))
+                .order(Deck_.name, OrderFlags.DESCENDING)
+                .build().findFirst()
+        }
+    }
+
     suspend fun getDecksForPlayer(playerId: Long): List<Deck> {
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(Deck::class.java)

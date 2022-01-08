@@ -17,4 +17,7 @@ data class Player(
 
     @Backlink(to = "player")
     lateinit var decks: ToMany<Deck>
+
+    @Backlink(to = "player")
+    lateinit var tournamentPlayers: ToMany<TournamentPlayer>
 }

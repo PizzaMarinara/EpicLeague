@@ -6,7 +6,13 @@
     <string name="player_firstName">Name</string>
     <string name="player_lastName">Surname</string>
     <string name="deck_name">Deck name</string>
+    <string name="tournament_name">Tournament name</string>
 
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+
+    <string name="select_player">Choose a Player</string>
+    <string name="warning">Warning</string>
+    <string name="please_select_entry">Please select an entry!</string>
+    <string name="ok">OK</string>
 </resources>
