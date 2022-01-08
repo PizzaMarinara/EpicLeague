@@ -87,6 +87,9 @@ fun TournamentDetailContent(
                             var expanded by rememberSaveable { mutableStateOf(false) }
                             var selectedPlayer: Player? by rememberSaveable { mutableStateOf(null) }
                             val openDialog = rememberSaveable { mutableStateOf(false) }
+                            val playersAvailable = tournamentDetailViewModel
+                                .tournamentDetailContentUiState
+                                .availablePlayers.isNotEmpty()
                             val icon = if (expanded)
                                 Icons.Filled.KeyboardArrowUp
                             else
@@ -96,14 +99,25 @@ fun TournamentDetailContent(
                                 value = selectedPlayer?.fullName ?: "",
                                 onValueChange = { },
                                 enabled = false,
-                                modifier = Modifier
-                                    .fillMaxWidth().clickable { expanded = !expanded },
-                                label = { Text(stringResource(R.string.select_player)) },
+                                modifier = if (playersAvailable) {
+                                    Modifier.fillMaxWidth().clickable { expanded = !expanded }
+                                } else {
+                                    Modifier.fillMaxWidth()
+                                },
+                                label = {
+                                    if (playersAvailable) {
+                                        Text(stringResource(R.string.select_player))
+                                    } else {
+                                        Text(stringResource(R.string.no_more_players))
+                                    }
+                                },
                                 trailingIcon = {
-                                    Icon(
-                                        imageVector = icon,
-                                        contentDescription = "contentDescription"
-                                    )
+                                    if (playersAvailable) {
+                                        Icon(
+                                            imageVector = icon,
+                                            contentDescription = "contentDescription"
+                                        )
+                                    }
                                 }
                             )
                             DropdownMenu(
@@ -122,24 +136,26 @@ fun TournamentDetailContent(
                                         }
                                     }
                             }
-                            Button(
-                                onClick = {
-                                    if (selectedPlayer == null) {
-                                        openDialog.value = true
-                                    } else {
-                                        isEditing = false
-                                        tournamentDetailViewModel.putTournamentPlayers(
-                                            listOf(
-                                                TournamentPlayer().also {
-                                                    it.player.target = selectedPlayer
-                                                    it.tournament.target = tournament
-                                                }
+                            if (playersAvailable) {
+                                Button(
+                                    onClick = {
+                                        if (selectedPlayer == null) {
+                                            openDialog.value = true
+                                        } else {
+                                            isEditing = false
+                                            tournamentDetailViewModel.putTournamentPlayers(
+                                                listOf(
+                                                    TournamentPlayer().also {
+                                                        it.player.target = selectedPlayer
+                                                        it.tournament.target = tournament
+                                                    }
+                                                )
                                             )
-                                        )
+                                        }
                                     }
+                                ) {
+                                    Text(stringResource(id = R.string.confirm))
                                 }
-                            ) {
-                                Text(stringResource(id = R.string.confirm))
                             }
                             if (openDialog.value) {
                                 AlertDialog(

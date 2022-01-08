@@ -43,6 +43,12 @@ class TournamentRepository private constructor(
     suspend fun getPlayersNotInTournament(tournamentId: Long): List<Player> {
         return withContext(defaultDispatcher) {
             val builder = ObjectBox.get().boxFor(Player::class.java).query()
+            builder.filter { player ->
+                player.tournamentPlayers.isEmpty() ||
+                    player.tournamentPlayers.all { tournamentPlayer ->
+                        tournamentPlayer.tournament.target.id != tournamentId
+                    }
+            }
             builder.build().find()
         }
     }

@@ -48,7 +48,8 @@ class TournamentDetailViewModel @Inject constructor(
                 tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
                     tournamentPlayers = tournamentPlayerRepository
                         .getPlayersForTournament(tournamentId)
-                        .map { TournamentPlayerItemUiState(it) }
+                        .map { TournamentPlayerItemUiState(it) },
+                    availablePlayers = tournamentRepository.getPlayersNotInTournament(tournamentId)
                 )
             }
         }
@@ -58,16 +59,6 @@ class TournamentDetailViewModel @Inject constructor(
         viewModelScope.launch {
             tournamentPlayerRepository.putItems(items)
             getTournamentPlayers()
-        }
-    }
-
-    private fun refreshPlayers() {
-        viewModelScope.launch {
-            tournamentId?.let {
-                tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
-                    availablePlayers = tournamentRepository.getPlayersNotInTournament(tournamentId)
-                )
-            }
         }
     }
 }
