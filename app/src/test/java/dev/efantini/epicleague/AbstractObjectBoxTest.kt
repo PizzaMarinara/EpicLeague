@@ -3,9 +3,9 @@ package dev.efantini.epicleague
 import dev.efantini.epicleague.data.models.MyObjectBox
 import io.objectbox.BoxStore
 import io.objectbox.DebugFlags
+import java.io.File
 import org.junit.After
 import org.junit.Before
-import java.io.File
 
 open class AbstractObjectBoxTest {
 
@@ -15,12 +15,9 @@ open class AbstractObjectBoxTest {
 
     @Before
     open fun setUp() {
-        // Delete any files in the test directory before each test to start with a clean database.
         BoxStore.deleteAllFiles(TEST_DIRECTORY)
         _store = MyObjectBox.builder()
-            // Use a custom directory to store the database files in.
             .directory(TEST_DIRECTORY)
-            // Optional: add debug flags for more detailed ObjectBox log output.
             .debugFlags(DebugFlags.LOG_QUERIES or DebugFlags.LOG_QUERY_PARAMETERS)
             .build()
     }

@@ -9,17 +9,17 @@ import dev.efantini.epicleague.data.models.TournamentRound
 import org.junit.Before
 import org.junit.Test
 
-class TournamentTest : AbstractObjectBoxTest() {
+class FinalStandingsTest : AbstractObjectBoxTest() {
 
     @Before
     override fun setUp() {
         super.setUp()
-        val p1 = Player(firstName = "Enrico", lastName = "Fantini")
-        val p2 = Player(firstName = "Lorenzo", lastName = "Lanzi")
-        val p3 = Player(firstName = "Enrico", lastName = "Casanova")
-        val p4 = Player(firstName = "Fabio", lastName = "Romagnoli")
-        val p5 = Player(firstName = "Luca", lastName = "Mosconi")
-        val p6 = Player(firstName = "Enrico", lastName = "Canducci")
+        val p1 = Player(firstName = "Andy", lastName = "Atkinson")
+        val p2 = Player(firstName = "Bobby", lastName = "Bonanza")
+        val p3 = Player(firstName = "Candy", lastName = "Connor")
+        val p4 = Player(firstName = "Desmond", lastName = "Davidson")
+        val p5 = Player(firstName = "Emily", lastName = "Evans")
+        val p6 = Player(firstName = "Frank", lastName = "Fogarty")
 
         val playerBox = store.boxFor(Player::class.java)
         playerBox.put(p1)
@@ -44,7 +44,7 @@ class TournamentTest : AbstractObjectBoxTest() {
         deckBox.put(d5)
         deckBox.put(d6)
 
-        val torneo = Tournament(name = "Torne Al Rosso").apply {
+        val torneo = Tournament(name = "Just a test Tournament").apply {
             leaguePointsAssigned = "10-8-6-5-2-2-2-2-1"
             pointsToLast = true
         }
@@ -214,33 +214,19 @@ class TournamentTest : AbstractObjectBoxTest() {
 
         val tournamentBox = store.boxFor(Tournament::class.java)
         tournamentBox.put(torneo)
-
-        /*
-        1--3-6-9
-        2--0-3-6
-        3--3-3-6
-        4--0-3-3
-        5--3-3-3
-        6--0-0-0
-         */
     }
 
     @Test
-    fun checkTorneo() {
+    fun `final standings are correctly sorted`() {
 
         val tournamentBox = store.boxFor(Tournament::class.java)
-        val torneonazzo = tournamentBox.query()
+        val tournamentList = tournamentBox.query()
             .build().find()
-
-        assert(torneonazzo.size > 0)
-
-        val torneoAlRosso = torneonazzo[0]
-
-        assert(torneoAlRosso.tournamentPlayers.size == 6)
-
-        val classifica = torneoAlRosso.getStandings()
-
-        classifica.forEach {
+        assert(tournamentList.size > 0)
+        val tournament1 = tournamentList[0]
+        assert(tournament1.tournamentPlayers.size == 6)
+        val finalStandings = tournament1.getStandings()
+        finalStandings.forEach {
             println("----")
             println(it.player.target.fullName)
             println("Points:" + it.getTournamentPoints())
@@ -249,6 +235,6 @@ class TournamentTest : AbstractObjectBoxTest() {
             println("OGW:" + it.getOpponentsGameWinPerc())
             println("----")
         }
-        assert(classifica.isNotEmpty())
+        assert(finalStandings.isNotEmpty())
     }
 }

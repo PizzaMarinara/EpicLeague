@@ -12,12 +12,12 @@ class EmptyTournamentTest : AbstractObjectBoxTest() {
     @Before
     override fun setUp() {
         super.setUp()
-        val p1 = Player(firstName = "Enrico", lastName = "Fantini")
-        val p2 = Player(firstName = "Lorenzo", lastName = "Lanzi")
-        val p3 = Player(firstName = "Enrico", lastName = "Casanova")
-        val p4 = Player(firstName = "Fabio", lastName = "Romagnoli")
-        val p5 = Player(firstName = "Luca", lastName = "Mosconi")
-        val p6 = Player(firstName = "Enrico", lastName = "Canducci")
+        val p1 = Player(firstName = "Andy", lastName = "Atkinson")
+        val p2 = Player(firstName = "Bobby", lastName = "Bonanza")
+        val p3 = Player(firstName = "Candy", lastName = "Connor")
+        val p4 = Player(firstName = "Desmond", lastName = "Davidson")
+        val p5 = Player(firstName = "Emily", lastName = "Evans")
+        val p6 = Player(firstName = "Frank", lastName = "Fogarty")
 
         val playerBox = store.boxFor(Player::class.java)
         playerBox.put(p1)
@@ -42,7 +42,7 @@ class EmptyTournamentTest : AbstractObjectBoxTest() {
         deckBox.put(d5)
         deckBox.put(d6)
 
-        val torneo = Tournament(name = "Torne Al Rosso").apply {
+        val torneo = Tournament(name = "Just a test Tournament").apply {
             leaguePointsAssigned = "10-8-6-5-2-2-2-2-1"
             pointsToLast = true
         }
@@ -100,25 +100,29 @@ class EmptyTournamentTest : AbstractObjectBoxTest() {
     }
 
     @Test
-    fun checkTorneo() {
+    fun `a tournament without matches still has saved players`() {
 
         val tournamentBox = store.boxFor(Tournament::class.java)
-        val torneonazzo = tournamentBox.query()
+        val tournamentList = tournamentBox.query()
             .build().find()
+        assert(tournamentList.size > 0)
+        val tournament1 = tournamentList[0]
+        assert(tournament1.tournamentPlayers.size == 6)
+    }
 
-        assert(torneonazzo.size > 0)
+    @Test
+    fun `a tournament without matches still returns standings`() {
 
-        val torneoAlRosso = torneonazzo[0]
-
-        assert(torneoAlRosso.tournamentPlayers.size == 6)
-
-        val classifica = torneoAlRosso.getStandings()
-
-        classifica.forEach {
+        val tournamentBox = store.boxFor(Tournament::class.java)
+        val tournamentList = tournamentBox.query()
+            .build().find()
+        val tournament1 = tournamentList[0]
+        val standings = tournament1.getStandings()
+        standings.forEach {
             println("----")
             println(it.player.target.fullName + " - Points:" + it.getTournamentPoints())
             println("----")
         }
-        assert(classifica.isNotEmpty())
+        assert(standings.isNotEmpty())
     }
 }
