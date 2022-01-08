@@ -14,7 +14,7 @@ data class TournamentPlayer(
 
     fun getMatches(): List<TournamentMatch> {
         val playerMatches = mutableListOf<TournamentMatch>()
-        tournament.target.tournamentRounds.toList()
+        tournament.target.tournamentRounds
             .sortedByDescending { it.turnNumber }.forEach { round ->
                 round.tournamentMatches.forEach { match ->
                     if (match.tournamentPlayer1.target == this ||
@@ -24,7 +24,7 @@ data class TournamentPlayer(
                     }
                 }
             }
-        return playerMatches.toList()
+        return playerMatches
     }
 
     fun getTournamentPoints(): Int {

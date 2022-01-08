@@ -78,7 +78,7 @@ data class Tournament(
 
     fun getStandings(): List<TournamentPlayer> {
 
-        return tournamentPlayers.toList().sortedWith(
+        return tournamentPlayers.sortedWith(
             compareByDescending<TournamentPlayer> { it.getTournamentPoints() }
                 .thenByDescending { it.getOpponentsWinPerc() }
                 .thenByDescending { it.getGameWinPerc() }
