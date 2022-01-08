@@ -179,80 +179,80 @@ class ObjectBoxTests : AbstractObjectBoxTest() {
             deck.target = d6
         }
 
-        torneo.players.add(tp1)
-        torneo.players.add(tp2)
-        torneo.players.add(tp3)
-        torneo.players.add(tp4)
-        torneo.players.add(tp5)
-        torneo.players.add(tp6)
+        torneo.tournamentPlayers.add(tp1)
+        torneo.tournamentPlayers.add(tp2)
+        torneo.tournamentPlayers.add(tp3)
+        torneo.tournamentPlayers.add(tp4)
+        torneo.tournamentPlayers.add(tp5)
+        torneo.tournamentPlayers.add(tp6)
 
         val r1m1 = TournamentMatch().apply {
-            player1.target = tp1
-            player2.target = tp2
+            tournamentPlayer1.target = tp1
+            tournamentPlayer2.target = tp2
         }
         val r1m2 = TournamentMatch().apply {
-            player1.target = tp3
-            player2.target = tp4
+            tournamentPlayer1.target = tp3
+            tournamentPlayer2.target = tp4
         }
         val r1m3 = TournamentMatch().apply {
-            player1.target = tp5
-            player2.target = tp6
+            tournamentPlayer1.target = tp5
+            tournamentPlayer2.target = tp6
         }
 
         val r1 = TournamentRound().apply {
-            matches.add(r1m1)
-            matches.add(r1m2)
-            matches.add(r1m3)
+            tournamentMatches.add(r1m1)
+            tournamentMatches.add(r1m2)
+            tournamentMatches.add(r1m3)
         }
 
         val r2m1 = TournamentMatch().apply {
-            player1.target = tp1
-            player2.target = tp3
+            tournamentPlayer1.target = tp1
+            tournamentPlayer2.target = tp3
         }
         val r2m2 = TournamentMatch().apply {
-            player1.target = tp2
-            player2.target = tp5
+            tournamentPlayer1.target = tp2
+            tournamentPlayer2.target = tp5
         }
         val r2m3 = TournamentMatch().apply {
-            player1.target = tp4
-            player2.target = tp6
+            tournamentPlayer1.target = tp4
+            tournamentPlayer2.target = tp6
         }
 
         val r2 = TournamentRound().apply {
-            matches.add(r2m1)
-            matches.add(r2m2)
-            matches.add(r2m3)
+            tournamentMatches.add(r2m1)
+            tournamentMatches.add(r2m2)
+            tournamentMatches.add(r2m3)
         }
 
         val r3m1 = TournamentMatch().apply {
-            player1.target = tp1
-            player2.target = tp4
+            tournamentPlayer1.target = tp1
+            tournamentPlayer2.target = tp4
         }
         val r3m2 = TournamentMatch().apply {
-            player1.target = tp2
-            player2.target = tp6
+            tournamentPlayer1.target = tp2
+            tournamentPlayer2.target = tp6
         }
         val r3m3 = TournamentMatch().apply {
-            player1.target = tp3
-            player2.target = tp5
+            tournamentPlayer1.target = tp3
+            tournamentPlayer2.target = tp5
         }
 
         val r3 = TournamentRound().apply {
-            matches.add(r3m1)
-            matches.add(r3m2)
-            matches.add(r3m3)
+            tournamentMatches.add(r3m1)
+            tournamentMatches.add(r3m2)
+            tournamentMatches.add(r3m3)
         }
 
         val tournament = Tournament().apply {
-            rounds.add(r1)
-            rounds.add(r2)
-            rounds.add(r3)
-            players.add(tp1)
-            players.add(tp2)
-            players.add(tp3)
-            players.add(tp4)
-            players.add(tp5)
-            players.add(tp6)
+            tournamentRounds.add(r1)
+            tournamentRounds.add(r2)
+            tournamentRounds.add(r3)
+            tournamentPlayers.add(tp1)
+            tournamentPlayers.add(tp2)
+            tournamentPlayers.add(tp3)
+            tournamentPlayers.add(tp4)
+            tournamentPlayers.add(tp5)
+            tournamentPlayers.add(tp6)
         }
 
         val tournamentBox = store.boxFor(Tournament::class.java)

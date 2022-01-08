@@ -8,9 +8,10 @@ import io.objectbox.relation.ToOne
 
 @Entity
 data class TournamentRound(
-    @Id var id: Long = 0
+    @Id var id: Long = 0,
+    var turnNumber: Int = 0
 ) {
     lateinit var tournament: ToOne<Tournament>
     @Backlink(to = "tournamentRound")
-    lateinit var matches: ToMany<TournamentMatch>
+    lateinit var tournamentMatches: ToMany<TournamentMatch>
 }

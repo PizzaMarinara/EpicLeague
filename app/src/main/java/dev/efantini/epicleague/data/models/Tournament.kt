@@ -9,52 +9,82 @@ import io.objectbox.relation.ToMany
 data class Tournament(
     @Id var id: Long = 0,
     var name: String = "",
-    var pointsAssigned: String = "",
+    var leaguePointsAssigned: String = "",
     var pointsToLast: Boolean = true,
-    var date: String = ""
+    var date: String = "",
+    var winPoints: Int = 3,
+    var drawPoints: Int = 1,
+    var losePoints: Int = 0,
+    var floorWinPercentage: Double = 0.33
 ) {
     @Backlink(to = "tournament")
-    lateinit var rounds: ToMany<TournamentRound>
+    lateinit var tournamentRounds: ToMany<TournamentRound>
     @Backlink(to = "tournament")
-    lateinit var players: ToMany<TournamentPlayer>
+    lateinit var tournamentPlayers: ToMany<TournamentPlayer>
 
-    fun convertPointsToString(points: ArrayList<Int>): String {
-        return points.joinToString(separator = "-")
-    }
-
-    fun convertStringToPoints(string: String): List<Int> {
-        return string.split("-").map { it.toInt() }
-    }
-
-    fun getStandings(): List<Triple<Player, Int, Int>> {
-        val finalStandings: ArrayList<Pair<Player, Int>> = arrayListOf()
-        players.forEach { tournamentPlayer ->
-            var accumulatedPoints = 0
-            rounds.forEach { round ->
-                round.matches.forEach { match ->
-                    if (match.player1.target == tournamentPlayer ||
-                        match.player2.target == tournamentPlayer
-                    ) {
-                        when (match.getWinner()) {
-                            tournamentPlayer -> accumulatedPoints += 3
-                            null -> accumulatedPoints += 1
-                        }
-                    }
-                }
-            }
-            finalStandings.add(Pair(tournamentPlayer.player.target, accumulatedPoints))
+    companion object {
+        fun convertPointsToString(points: MutableList<Int>): String {
+            return points.joinToString(separator = "-")
         }
-        val campaignPoints = convertStringToPoints(pointsAssigned)
-        return finalStandings.sortedByDescending { it.second }.map {
-            if (campaignPoints.size < finalStandings.indexOf(it)) {
-                if (pointsToLast) {
-                    Triple(it.first, it.second, campaignPoints[campaignPoints.lastIndex])
+        fun convertStringToPoints(string: String): List<Int> {
+            return string.split("-").map {
+                if (it.isNotEmpty()) {
+                    it.toInt()
                 } else {
-                    Triple(it.first, it.second, 0)
+                    0
                 }
-            } else {
-                Triple(it.first, it.second, campaignPoints[finalStandings.indexOf(it)])
             }
         }
+        fun getNumberOfRounds(players: Int): Int? = when (players) {
+            in 2..4 -> 2
+            in 5..8 -> 3
+            in 9..16 -> 4
+            in 17..32 -> 5
+            in 33..64 -> 6
+            in 65..128 -> 7
+            in 129..212 -> 8
+            in 213..385 -> 9
+            else -> null
+        }
+    }
+
+    fun pairNewRound(): TournamentRound? {
+        val calculatedRounds = getNumberOfRounds(tournamentPlayers.size)
+        if (calculatedRounds == null || calculatedRounds <= tournamentRounds.size) {
+            return null
+        }
+
+        return TournamentRound(
+            turnNumber = if (tournamentRounds.isEmpty())
+                1
+            else
+                tournamentRounds.minOf { it.turnNumber } + 1
+        ).also { tournamentRound ->
+            tournamentRound.tournament.target = this
+        }.also { tournamentRound ->
+            val roundMatches = mutableListOf<TournamentMatch>()
+            getStandings().chunked(2).forEach { pairOfPlayers ->
+                roundMatches.add(
+                    TournamentMatch().also { tournamentMatch ->
+                        tournamentMatch.tournamentRound.target = tournamentRound
+                        tournamentMatch.tournamentPlayer1.target = pairOfPlayers[0]
+                        if (pairOfPlayers.size > 1)
+                            tournamentMatch.tournamentPlayer2.target = pairOfPlayers[1]
+                    }
+                )
+            }
+        }
+    }
+
+    fun getStandings(): List<TournamentPlayer> {
+
+        return tournamentPlayers.toList().sortedWith(
+            compareByDescending<TournamentPlayer> { it.getTournamentPoints() }
+                .thenByDescending { it.getOpponentsWinPerc() }
+                .thenByDescending { it.getGameWinPerc() }
+                .thenByDescending { it.getOpponentsGameWinPerc() }
+                .thenBy { it.player.target.lastName }
+                .thenBy { it.player.target.firstName }
+        )
     }
 }

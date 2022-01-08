@@ -9,8 +9,7 @@ import dev.efantini.epicleague.data.models.TournamentRound
 import org.junit.Before
 import org.junit.Test
 
-class TournamentTest : AbstractObjectBoxTest() {
-
+class MatchTest : AbstractObjectBoxTest() {
     @Before
     override fun setUp() {
         super.setUp()
@@ -90,7 +89,7 @@ class TournamentTest : AbstractObjectBoxTest() {
 
         val tournamentMatchBox = store.boxFor(TournamentMatch::class.java)
 
-        val r1 = TournamentRound(turnNumber = 1)
+        val r1 = TournamentRound()
         r1.apply {
             val m1 = TournamentMatch().apply {
                 tournamentPlayer1.target = tp1
@@ -125,7 +124,7 @@ class TournamentTest : AbstractObjectBoxTest() {
             tournament.target = torneo
         }
 
-        val r2 = TournamentRound(turnNumber = 2)
+        val r2 = TournamentRound()
         r2.apply {
             val m1 = TournamentMatch().apply {
                 tournamentPlayer1.target = tp1
@@ -160,7 +159,7 @@ class TournamentTest : AbstractObjectBoxTest() {
             tournament.target = torneo
         }
 
-        val r3 = TournamentRound(turnNumber = 3)
+        val r3 = TournamentRound()
         r3.apply {
             val m1 = TournamentMatch().apply {
                 tournamentPlayer1.target = tp1
@@ -226,7 +225,7 @@ class TournamentTest : AbstractObjectBoxTest() {
     }
 
     @Test
-    fun checkTorneo() {
+    fun checkOpponent() {
 
         val tournamentBox = store.boxFor(Tournament::class.java)
         val torneonazzo = tournamentBox.query()
@@ -235,20 +234,18 @@ class TournamentTest : AbstractObjectBoxTest() {
         assert(torneonazzo.size > 0)
 
         val torneoAlRosso = torneonazzo[0]
+        val matchEnricoLorenzo = torneoAlRosso.tournamentRounds[0].tournamentMatches[0]
+        val enrico = torneoAlRosso
+            .tournamentPlayers
+            .toList()
+            .first { it.player.target.lastName == "Fantini" }
+        assert(matchEnricoLorenzo.getOpponent(enrico)?.player?.target?.firstName == "Lorenzo")
+    }
 
-        assert(torneoAlRosso.tournamentPlayers.size == 6)
+    @Test
+    fun checkNull() {
 
-        val classifica = torneoAlRosso.getStandings()
-
-        classifica.forEach {
-            println("----")
-            println(it.player.target.fullName)
-            println("Points:" + it.getTournamentPoints())
-            println("OMW:" + it.getOpponentsWinPerc())
-            println("GW:" + it.getGameWinPerc())
-            println("OGW:" + it.getOpponentsGameWinPerc())
-            println("----")
-        }
-        assert(classifica.isNotEmpty())
+        val match = TournamentMatch()
+        assert(match.tournamentPlayer1.target == null)
     }
 }
