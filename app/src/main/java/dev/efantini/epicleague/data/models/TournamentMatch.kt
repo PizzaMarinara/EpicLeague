@@ -9,16 +9,17 @@ data class TournamentMatch(
     @Id
     var id: Long = 0,
     var player1Points: Int = 0,
-    var player2Points: Int = 0
+    var player2Points: Int = 0,
+    var matchNumber: Int = 0
 ) {
     lateinit var tournamentRound: ToOne<TournamentRound>
-    lateinit var tournamentPlayer1: ToOne<TournamentPlayer>
-    lateinit var tournamentPlayer2: ToOne<TournamentPlayer>
+    lateinit var tournamentPlayer1: ToOne<TournamentPlayer?>
+    lateinit var tournamentPlayer2: ToOne<TournamentPlayer?>
 
     fun getWinner(): TournamentPlayer? {
         return when {
-            tournamentPlayer2.isNull -> tournamentPlayer1.target
-            tournamentPlayer1.isNull -> tournamentPlayer2.target
+            tournamentPlayer2.target == null -> tournamentPlayer1.target
+            tournamentPlayer1.target == null -> tournamentPlayer2.target
             player1Points > player2Points -> tournamentPlayer1.target
             player1Points < player2Points -> tournamentPlayer2.target
             else -> null

@@ -21,7 +21,7 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 @DelicateCoroutinesApi
-class ObjectBoxTests : AbstractObjectBoxTest() {
+class ObjectBoxTest : AbstractObjectBoxTest() {
 
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 

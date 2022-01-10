@@ -254,7 +254,7 @@
     },
     {
       "id": "18:564405948662598168",
-      "lastPropertyId": "10:5513806236243071824",
+      "lastPropertyId": "11:375338358197890377",
       "name": "TournamentMatch",
       "properties": [
         {
@@ -296,6 +296,11 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "TournamentPlayer"
+        },
+        {
+          "id": "11:375338358197890377",
+          "name": "matchNumber",
+          "type": 5
         }
       ],
       "relations": []

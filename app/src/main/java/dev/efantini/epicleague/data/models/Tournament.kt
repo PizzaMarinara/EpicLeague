@@ -60,19 +60,20 @@ data class Tournament(
             else
                 tournamentRounds.minOf { it.turnNumber } + 1
         ).also { tournamentRound ->
-            tournamentRound.tournament.target = this
+            this.tournamentRounds.add(tournamentRound)
         }.also { tournamentRound ->
             val roundMatches = mutableListOf<TournamentMatch>()
-            getStandings().chunked(2).forEach { pairOfPlayers ->
+            getStandings().chunked(2).forEachIndexed { index, pairOfPlayers ->
                 roundMatches.add(
                     TournamentMatch().also { tournamentMatch ->
-                        tournamentMatch.tournamentRound.target = tournamentRound
+                        tournamentMatch.matchNumber = index
                         tournamentMatch.tournamentPlayer1.target = pairOfPlayers[0]
                         if (pairOfPlayers.size > 1)
                             tournamentMatch.tournamentPlayer2.target = pairOfPlayers[1]
                     }
                 )
             }
+            tournamentRound.tournamentMatches.addAll(roundMatches)
         }
     }
 
