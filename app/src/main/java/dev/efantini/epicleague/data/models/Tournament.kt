@@ -55,25 +55,11 @@ data class Tournament(
         }
 
         return TournamentRound(
-            turnNumber = if (tournamentRounds.isEmpty())
-                1
-            else
-                tournamentRounds.minOf { it.turnNumber } + 1
+            turnNumber = tournamentRounds.size + 1
         ).also { tournamentRound ->
             this.tournamentRounds.add(tournamentRound)
         }.also { tournamentRound ->
-            val roundMatches = mutableListOf<TournamentMatch>()
-            getStandings().chunked(2).forEachIndexed { index, pairOfPlayers ->
-                roundMatches.add(
-                    TournamentMatch().also { tournamentMatch ->
-                        tournamentMatch.matchNumber = index
-                        tournamentMatch.tournamentPlayer1.target = pairOfPlayers[0]
-                        if (pairOfPlayers.size > 1)
-                            tournamentMatch.tournamentPlayer2.target = pairOfPlayers[1]
-                    }
-                )
-            }
-            tournamentRound.tournamentMatches.addAll(roundMatches)
+            pairPlayers()?.let { tournamentRound.tournamentMatches.addAll(it) }
         }
     }
 
@@ -87,5 +73,39 @@ data class Tournament(
                 .thenBy { it.player.target.lastName }
                 .thenBy { it.player.target.firstName }
         )
+    }
+
+    private fun pairPlayers(): MutableList<TournamentMatch>? {
+        val roundMatches = mutableListOf<TournamentMatch>()
+        val playersToPair = getStandings().toMutableList()
+        val playerIterator = playersToPair.iterator()
+
+        while (playerIterator.hasNext()) {
+            val tournamentPlayer = playerIterator.next()
+            if (roundMatches.none { tournamentMatch ->
+                tournamentMatch.isPlayerPlaying(tournamentPlayer)
+            }
+            ) {
+                val possibleOpponents = playersToPair.filter { possibleOpponent ->
+                    possibleOpponent.player != tournamentPlayer.player &&
+                        !tournamentPlayer.getOpponentsPlayed().contains(possibleOpponent) &&
+                        roundMatches.none { tournamentMatch ->
+                            tournamentMatch.isPlayerPlaying(possibleOpponent)
+                        }
+                }
+                if (possibleOpponents.isEmpty() && playerIterator.hasNext()) {
+                    return null
+                }
+                roundMatches.add(
+                    TournamentMatch().also { tournamentMatch ->
+                        tournamentMatch.matchNumber = roundMatches.size + 1
+                        tournamentMatch.tournamentPlayer1.target = tournamentPlayer
+                        tournamentMatch.tournamentPlayer2.target = possibleOpponents.firstOrNull()
+                    }
+                )
+            }
+            playerIterator.remove()
+        }
+        return roundMatches
     }
 }

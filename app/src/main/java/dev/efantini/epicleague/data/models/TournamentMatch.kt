@@ -41,4 +41,9 @@ data class TournamentMatch(
             else -> 0
         }
     }
+
+    fun isPlayerPlaying(tournamentPlayer: TournamentPlayer): Boolean {
+        return tournamentPlayer1.target == tournamentPlayer ||
+            tournamentPlayer2.target == tournamentPlayer
+    }
 }

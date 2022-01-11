@@ -27,6 +27,12 @@ data class TournamentPlayer(
         return playerMatches
     }
 
+    fun getOpponentsPlayed(): List<TournamentPlayer> {
+        return getMatches().mapNotNull {
+            it.getOpponent(this)
+        }
+    }
+
     fun getTournamentPoints(): Int {
         var accumulatedPoints = 0
         getMatches().forEach {
@@ -47,9 +53,9 @@ data class TournamentPlayer(
     }
 
     fun getOpponentsWinPerc(): Double {
-        return getMatches().mapNotNull {
-            it.getOpponent(this)
-        }.map {
+        if (getOpponentsPlayed().isEmpty())
+            return 0.0
+        return getOpponentsPlayed().map {
             if (it.getWinPercentage() < tournament.target.floorWinPercentage)
                 tournament.target.floorWinPercentage
             else
@@ -77,9 +83,7 @@ data class TournamentPlayer(
     }
 
     fun getOpponentsGameWinPerc(): Double {
-        return getMatches().mapNotNull {
-            it.getOpponent(this)
-        }.map {
+        return getOpponentsPlayed().map {
             if (it.getGameWinPerc() < tournament.target.floorWinPercentage)
                 tournament.target.floorWinPercentage
             else
