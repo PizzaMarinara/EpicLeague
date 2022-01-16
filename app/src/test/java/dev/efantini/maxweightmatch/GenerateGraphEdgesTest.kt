@@ -4,6 +4,7 @@ import dev.efantini.epicleague.data.models.Deck
 import dev.efantini.epicleague.data.models.Player
 import dev.efantini.epicleague.data.models.Tournament
 import dev.efantini.epicleague.data.models.TournamentPlayer
+import dev.efantini.epicleague.domain.GraphEdge
 import dev.efantini.epicleague.domain.WeightedMaximumMatchingAlgo
 import org.junit.Before
 import org.junit.Test
@@ -81,66 +82,269 @@ class GenerateGraphEdgesTest {
     }
 
     @Test
-    fun `graph edges are returned correctly`() {
-        val edges = WeightedMaximumMatchingAlgo.getGraphEdges(torneo.getStandings())
+    fun `graph edges are matched correctly`() {
+        val standings = torneo.getStandings()
+        val edges = WeightedMaximumMatchingAlgo.getGraphEdges(standings)
+        val matching = WeightedMaximumMatchingAlgo.maxWeightMatching(edges)
         println("---")
-        edges.forEachIndexed { index, it ->
+        matching.forEachIndexed { index, it ->
             println(
-                "Edge[" + index + "]: " +
-                    it.node1 + " to " + it.node2 + " - Weight: " + it.weight
+                "Match ${index + 1}: ${standings[it.first.toInt()].player.target.fullName} " +
+                    "vs ${standings[it.second.toInt()].player.target.fullName}"
+            )
+            assert(
+                matching.all { matchedPair ->
+                    matchedPair == it || (
+                        matchedPair.first != it.first &&
+                            matchedPair.first != it.second &&
+                            matchedPair.second != it.first &&
+                            matchedPair.second != it.second
+                        )
+                }
             )
         }
         println("---")
+    }
 
-        val nedges = edges.count()
-        var nvertices = 0
-        edges.forEach { graphEdge ->
-            if (graphEdge.node1 >= 0 &&
-                graphEdge.node2 >= 0 &&
-                graphEdge.node1 != graphEdge.node2
-            ) {
-                if (graphEdge.node1 >= nvertices)
-                    nvertices = (graphEdge.node1 + 1).toInt()
-                if (graphEdge.node2 >= nvertices)
-                    nvertices = (graphEdge.node2 + 1).toInt()
-            }
-        }
-        println("N. Edges: " + nedges)
-        println("N. Vertices: " + nvertices)
+    @Test
+    fun test10() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf()
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>())
+    }
 
-        println("---")
-        val endpoints = mutableListOf<Long>()
-        edges.forEach {
-            endpoints.add(it.node1)
-            endpoints.add(it.node2)
-        }
-        endpoints.forEachIndexed { index, it ->
-            println(
-                "Edge[" + index + "]: " +
-                    it
+    @Test
+    fun test11() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(0, 1, 1)
             )
-        }
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(1, 0))
+    }
 
-        println("---")
-        val neighbend = mutableListOf<MutableList<Int>>()
-        edges.forEachIndexed { k, graphEdge ->
-            if (neighbend.size <= graphEdge.node1.toInt()) {
-                neighbend.add(graphEdge.node1.toInt(), mutableListOf())
-            }
-            neighbend[graphEdge.node1.toInt()].add((2 * k) + 1)
-            if (neighbend.size <= graphEdge.node2.toInt()) {
-                neighbend.add(graphEdge.node2.toInt(), mutableListOf())
-            }
-            neighbend[graphEdge.node2.toInt()].add((2 * k))
-        }
+    @Test
+    fun test12() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 10),
+                GraphEdge(2, 3, 11)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, -1, 3, 2))
+    }
 
-        neighbend.forEachIndexed { index, it ->
-            it.forEach {
-                println(
-                    "Neighbend[" + index + "]: " +
-                        it
-                )
-            }
-        }
+    @Test
+    fun test13() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 5),
+                GraphEdge(2, 3, 11),
+                GraphEdge(3, 4, 5)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, -1, 3, 2, -1))
+    }
+
+    @Test
+    fun test14_maxcard() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 5),
+                GraphEdge(2, 3, 11),
+                GraphEdge(3, 4, 5)
+            ),
+            maxcardinality = true
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, 4, 3))
+    }
+
+    @Test
+    fun test16_negative() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 2),
+                GraphEdge(1, 3, -2),
+                GraphEdge(2, 3, 1),
+                GraphEdge(2, 4, -1),
+                GraphEdge(3, 4, -6)
+            ),
+            maxcardinality = false
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, -1, -1))
+    }
+    @Test
+    fun test16_negative_maxcard() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 2),
+                GraphEdge(1, 3, -2),
+                GraphEdge(2, 3, 1),
+                GraphEdge(2, 4, -1),
+                GraphEdge(3, 4, -6)
+            ),
+            maxcardinality = true
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 3, 4, 1, 2))
+    }
+
+    @Test
+    fun test20_sblossom_1() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 8),
+                GraphEdge(1, 3, 9),
+                GraphEdge(2, 3, 10),
+                GraphEdge(3, 4, 7)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, 4, 3))
+    }
+
+    @Test
+    fun test20_sblossom_2() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 8),
+                GraphEdge(1, 3, 9),
+                GraphEdge(2, 3, 10),
+                GraphEdge(3, 4, 7),
+                GraphEdge(1, 6, 5),
+                GraphEdge(4, 5, 6)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 6, 3, 2, 5, 4, 1))
+    }
+
+    @Test
+    fun test21_tblossom_1() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 9),
+                GraphEdge(1, 3, 8),
+                GraphEdge(2, 3, 10),
+                GraphEdge(1, 4, 5),
+                GraphEdge(4, 5, 4),
+                GraphEdge(1, 6, 3)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 6, 3, 2, 5, 4, 1))
+    }
+
+    @Test
+    fun test21_tblossom_2() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 9),
+                GraphEdge(1, 3, 8),
+                GraphEdge(2, 3, 10),
+                GraphEdge(1, 4, 5),
+                GraphEdge(4, 5, 4),
+                GraphEdge(1, 6, 4)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 6, 3, 2, 5, 4, 1))
+    }
+
+    @Test
+    fun test21_tblossom_3() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 9),
+                GraphEdge(1, 3, 8),
+                GraphEdge(2, 3, 10),
+                GraphEdge(1, 4, 5),
+                GraphEdge(4, 5, 4),
+                GraphEdge(3, 6, 4)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, 6, 5, 4, 3))
+    }
+
+    @Test
+    fun test22_s_nest() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 9),
+                GraphEdge(1, 3, 9),
+                GraphEdge(2, 3, 10),
+                GraphEdge(2, 4, 8),
+                GraphEdge(3, 5, 8),
+                GraphEdge(4, 5, 10),
+                GraphEdge(5, 6, 6)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 3, 4, 1, 2, 6, 5))
+    }
+
+    @Test
+    fun test23_s_relabel_nest() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 10),
+                GraphEdge(1, 7, 10),
+                GraphEdge(2, 3, 12),
+                GraphEdge(3, 4, 20),
+                GraphEdge(3, 5, 20),
+                GraphEdge(4, 5, 25),
+                GraphEdge(5, 6, 10),
+                GraphEdge(6, 7, 10),
+                GraphEdge(7, 8, 8)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, 4, 3, 6, 5, 8, 7))
+    }
+
+    @Test
+    fun test24_s_nest_expand() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 8),
+                GraphEdge(1, 3, 8),
+                GraphEdge(2, 3, 10),
+                GraphEdge(2, 4, 12),
+                GraphEdge(3, 5, 12),
+                GraphEdge(4, 5, 14),
+                GraphEdge(4, 6, 12),
+                GraphEdge(5, 7, 12),
+                GraphEdge(6, 7, 14),
+                GraphEdge(7, 8, 12)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 2, 1, 5, 6, 3, 4, 8, 7))
+    }
+
+    @Test
+    fun test25_s_t_expand() {
+        val weightMatchList = WeightedMaximumMatchingAlgo.maxWeightMatchingList(
+            listOf(
+                GraphEdge(1, 2, 23),
+                GraphEdge(1, 5, 22),
+                GraphEdge(1, 6, 15),
+                GraphEdge(2, 3, 25),
+                GraphEdge(3, 4, 22),
+                GraphEdge(4, 5, 25),
+                GraphEdge(4, 8, 14),
+                GraphEdge(5, 7, 13)
+            )
+        )
+        println(weightMatchList)
+        assert(weightMatchList == listOf<Long>(-1, 6, 3, 2, 8, 7, 1, 5, 4))
     }
 }

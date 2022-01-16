@@ -12,9 +12,9 @@ data class TournamentPlayer(
     lateinit var deck: ToOne<Deck>
     lateinit var tournament: ToOne<Tournament>
 
-    fun getMatches(): List<TournamentMatch> {
+    private fun getMatches(): List<TournamentMatch> {
         val playerMatches = mutableListOf<TournamentMatch>()
-        tournament.target.tournamentRounds
+        tournament.target.tournamentRounds.filter { it.isFinished }
             .sortedByDescending { it.turnNumber }.forEach { round ->
                 round.tournamentMatches.forEach { match ->
                     if (match.tournamentPlayer1.target == this ||

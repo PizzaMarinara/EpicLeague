@@ -7,7 +7,7 @@ import dev.efantini.epicleague.data.models.TournamentPlayer
 import org.junit.Before
 import org.junit.Test
 
-class PairingsTest {
+class Pairings6Test {
 
     lateinit var torneo: Tournament
 
@@ -39,31 +39,31 @@ class PairingsTest {
             deck.target = d1
         }
         val tp2 = TournamentPlayer().apply {
-            id = 2
+            id = 6
             tournament.target = torneo
             player.target = p2
             deck.target = d2
         }
         val tp3 = TournamentPlayer().apply {
-            id = 3
+            id = 2
             tournament.target = torneo
             player.target = p3
             deck.target = d3
         }
         val tp4 = TournamentPlayer().apply {
-            id = 4
+            id = 5
             tournament.target = torneo
             player.target = p4
             deck.target = d4
         }
         val tp5 = TournamentPlayer().apply {
-            id = 5
+            id = 3
             tournament.target = torneo
             player.target = p5
             deck.target = d5
         }
         val tp6 = TournamentPlayer().apply {
-            id = 6
+            id = 4
             tournament.target = torneo
             player.target = p6
             deck.target = d6
@@ -80,8 +80,50 @@ class PairingsTest {
     }
 
     @Test
-    fun `first round is paired correctly`() {
+    fun `rounds are paired correctly`() {
+        printStandings()
         torneo.pairNewRound()
+        torneo.tournamentRounds[0].tournamentMatches.forEach {
+            if (it.tournamentPlayer1.target?.player?.targetId!!
+                < it.tournamentPlayer2.target?.player?.targetId!!
+            ) {
+                it.player1Points = 2
+                it.player2Points = 0
+            } else {
+                it.player1Points = 0
+                it.player2Points = 2
+            }
+        }
+        torneo.tournamentRounds[0].isFinished = true
+        printStandings()
+        torneo.pairNewRound()
+        torneo.tournamentRounds[1].tournamentMatches.forEach {
+            if (it.tournamentPlayer1.target?.player?.targetId!!
+                < it.tournamentPlayer2.target?.player?.targetId!!
+            ) {
+                it.player1Points = 2
+                it.player2Points = 0
+            } else {
+                it.player1Points = 0
+                it.player2Points = 2
+            }
+        }
+        torneo.tournamentRounds[1].isFinished = true
+        printStandings()
+        torneo.pairNewRound()
+        torneo.tournamentRounds[2].tournamentMatches.forEach {
+            if (it.tournamentPlayer1.target?.player?.targetId!!
+                < it.tournamentPlayer2.target?.player?.targetId!!
+            ) {
+                it.player1Points = 2
+                it.player2Points = 0
+            } else {
+                it.player1Points = 0
+                it.player2Points = 2
+            }
+        }
+        torneo.tournamentRounds[2].isFinished = true
+        printStandings()
         assert(torneo.tournamentRounds.size > 0)
         torneo.tournamentRounds.forEach { tournamentRound ->
             assert(tournamentRound.tournamentMatches.size > 0)
@@ -95,7 +137,6 @@ class PairingsTest {
                 println("Match: " + tournamentMatch.matchNumber)
                 println("$player1 VS $player2")
                 println("---")
-                assert(tournamentMatch.getWinner()?.player?.target?.fullName == null)
             }
         }
     }
@@ -184,6 +225,10 @@ class PairingsTest {
                 println("---")
             }
         }
+        printStandings()
+    }
+
+    private fun printStandings() {
         torneo.getStandings().forEach {
             println("----")
             println(it.player.target.fullName)

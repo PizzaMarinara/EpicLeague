@@ -6,6 +6,8 @@ import kotlin.math.min
 
 object WeightedMaximumMatchingAlgo {
 
+    val debugMode = true
+
     private fun weightTwoPlayers(
         highScore: Long,
         player1: TournamentPlayer,
@@ -14,15 +16,9 @@ object WeightedMaximumMatchingAlgo {
 
         var weight: Long = 0
 
-        /**
-         * If two players haven't played, system will give the highest weight.
-         */
         if (!player1.getOpponentsPlayed().contains(player2))
             weight += quality(highScore, highScore) + 1
 
-        /**
-         * Determine a score of the pairing based on the players' current scores.
-         */
         val best = max(player1.getTournamentPoints(), player2.getTournamentPoints()).toLong()
         val worst = min(player1.getTournamentPoints(), player2.getTournamentPoints()).toLong()
         val spread = best - worst
@@ -62,16 +58,33 @@ object WeightedMaximumMatchingAlgo {
         return edges
     }
 
-    fun maxWeightMatching(edges: List<GraphEdge>): List<Pair<Long, Long>> {
-        /**
-         * Deal swiftly with empty graphs.
-         */
-        if (edges.isEmpty())
-            return listOf()
+    fun maxWeightMatching(
+        edges: List<GraphEdge>,
+        maxcardinality: Boolean = false
+    ): List<Pair<Long, Long>> {
+        val returnPairs = mutableListOf<Pair<Long, Long>>()
 
-        /**
-         * Count vertices and edges
-         */
+        val mate = maxWeightMatchingList(edges, maxcardinality)
+
+        mate.forEachIndexed { index, l ->
+            if (returnPairs.none {
+                (it.first == l || it.second == l) && l.toInt() != -1
+            }
+            ) {
+                returnPairs.add(Pair(index.toLong(), l))
+            }
+        }
+        return returnPairs
+    }
+
+    fun maxWeightMatchingList(
+        edges: List<GraphEdge>,
+        maxcardinality: Boolean = false
+    ): MutableList<Long> {
+
+        if (edges.isEmpty())
+            return mutableListOf()
+
         val nedges = edges.count()
         var nvertex = 0
         edges.forEach { graphEdge ->
@@ -96,10 +109,16 @@ object WeightedMaximumMatchingAlgo {
         val neighbend = mutableListOf<MutableList<Int>>()
         edges.forEachIndexed { k, graphEdge ->
             if (neighbend.size <= graphEdge.node1.toInt()) {
+                for (help in neighbend.size until graphEdge.node1.toInt()) {
+                    neighbend.add(help, mutableListOf())
+                }
                 neighbend.add(graphEdge.node1.toInt(), mutableListOf())
             }
             neighbend[graphEdge.node1.toInt()].add((2 * k) + 1)
             if (neighbend.size <= graphEdge.node2.toInt()) {
+                for (help in neighbend.size until graphEdge.node2.toInt()) {
+                    neighbend.add(help, mutableListOf())
+                }
                 neighbend.add(graphEdge.node2.toInt(), mutableListOf())
             }
             neighbend[graphEdge.node2.toInt()].add((2 * k))
@@ -197,13 +216,13 @@ object WeightedMaximumMatchingAlgo {
             allowedge.add(false)
         }
 
-        val queue = mutableListOf<Any>()
+        val queue = mutableListOf<Int>()
 
         fun slack(k: Int): Long {
             return (
                 dualvar[edges[k].node1.toInt()] +
                     dualvar[edges[k].node2.toInt()] -
-                    2 * edges[k].weight
+                    (2 * edges[k].weight)
                 )
         }
 
@@ -213,7 +232,7 @@ object WeightedMaximumMatchingAlgo {
             } else {
                 blossomchilds[b].flatMap { t ->
                     if (t < nvertex) {
-                        mutableListOf(b)
+                        mutableListOf(t)
                     } else {
                         blossomLeaves(t)
                     }
@@ -222,30 +241,31 @@ object WeightedMaximumMatchingAlgo {
         }
 
         fun assignLabel(w: Int, t: Int, p: Int) {
+            if (debugMode) println("assignLabel($w,$t,$p)")
             val b = inblossom[w]
-            if (label[w] == 0 && label[b] == 0) {
-                label[w] = t
-                label[b] = t
-                labelend[w] = p
-                labelend[b] = p
-                bestedge[w] = -1
-                bestedge[b] = -1
-                if (t == 1) {
-                    queue.addAll(blossomLeaves(b))
-                } else if (t == 2) {
-                    val base = blossombase[b]
-                    assert(mate[base] >= 0)
-                    assignLabel(
-                        endpoint[mate[base].toInt()].toInt(),
-                        1,
-                        mate[base].xor(1).toInt()
-                    )
-                }
+            assert(label[w] == 0 && label[b] == 0)
+            label[w] = t
+            label[b] = t
+            labelend[w] = p
+            labelend[b] = p
+            bestedge[w] = -1
+            bestedge[b] = -1
+            if (t == 1) {
+                queue.addAll(blossomLeaves(b))
+                if (debugMode) println("PUSH ${blossomLeaves(b)}")
+            } else if (t == 2) {
+                val base = blossombase[b]
+                assert(mate[base] >= 0)
+                assignLabel(
+                    endpoint[mate[base].toInt()].toInt(),
+                    1,
+                    mate[base].xor(1).toInt()
+                )
             }
         }
 
         fun scanBlossom(parV: Int, parW: Int): Int {
-
+            if (debugMode) println("scanBlossom($parV,$parW)")
             var v = parV
             var w = parW
             val path = mutableListOf<Int>()
@@ -254,7 +274,7 @@ object WeightedMaximumMatchingAlgo {
                 var b = inblossom[v]
                 if (label[b].and(4) != 0) {
                     base = blossombase[b]
-                    return base
+                    break
                 }
                 assert(label[b] == 1)
                 path.add(b)
@@ -272,9 +292,9 @@ object WeightedMaximumMatchingAlgo {
                 if (w != -1) {
                     v = w.also { w = v }
                 }
-                path.forEach {
-                    label[it] = 1
-                }
+            }
+            path.forEach {
+                label[it] = 1
             }
             return base
         }
@@ -287,6 +307,7 @@ object WeightedMaximumMatchingAlgo {
             var bv = inblossom[v]
             var bw = inblossom[w]
             val b = unusedblossoms.removeLast()
+            if (debugMode) println("addBlossom($base,$k) (v=$v w=$w) -> $b")
             blossombase[b] = base
             blossomparent[b] = -1
             blossomparent[bb] = b
@@ -326,11 +347,11 @@ object WeightedMaximumMatchingAlgo {
             label[b] = 1
             labelend[b] = labelend[bb]
             dualvar[b] = 0
-            blossomLeaves(b).forEach {
-                if (label[inblossom[it]] == 2) {
-                    queue.add(it)
+            blossomLeaves(b).forEach { vIns ->
+                if (label[inblossom[vIns]] == 2) {
+                    queue.add(vIns)
                 }
-                inblossom[it] = b
+                inblossom[vIns] = b
             }
             val bestedgeto = mutableListOf<Int>()
             for (i in 0 until nvertex) {
@@ -375,11 +396,12 @@ object WeightedMaximumMatchingAlgo {
                     bestedge[b] = it
                 }
             }
+            if (debugMode) println("blossomchilds[$b]=${blossomchilds[b]}")
         }
 
         // Some sketchy
         fun expandBlossom(b: Int, endstage: Boolean) {
-
+            if (debugMode) println("expandBlossom($b,$endstage) ${blossomchilds[b]}")
             blossomchilds[b].forEach { s ->
                 blossomparent[s] = -1
                 if (s < nvertex) {
@@ -392,7 +414,6 @@ object WeightedMaximumMatchingAlgo {
                     }
                 }
             }
-
             if (!endstage && label[b] == 2) {
                 assert(labelend[b] >= 0)
                 val entrychild = inblossom[endpoint[labelend[b].xor(1)].toInt()]
@@ -409,16 +430,25 @@ object WeightedMaximumMatchingAlgo {
                 }
                 val p = labelend[b]
                 while (j != 0) {
-                    label[endpoint[p.xor(1)].toInt()] = 0
-                    label[
-                        endpoint[
-                            blossomendps[b][j - endptrick]
-                                .xor(endptrick)
-                                .xor(1)
-                        ].toInt()
-                    ] = 0
+                    if (p.xor(1) < 0) {
+                        label[endpoint[endpoint.lastIndex + (p.xor(1)) + 1].toInt()] = 0
+                    } else {
+                        label[endpoint[p.xor(1)].toInt()] = 0
+                    }
+                    var innerLabelIndex = j - endptrick
+                    if (innerLabelIndex < 0) {
+                        innerLabelIndex = blossomendps[b].lastIndex + (j - endptrick) + 1
+                    }
+                    var outerLabelIndex = blossomendps[b][innerLabelIndex].xor(endptrick).xor(1)
+                    if (outerLabelIndex < 0) {
+                        outerLabelIndex = endpoint.lastIndex + (
+                            blossomendps[b][innerLabelIndex].xor(endptrick).xor(1)
+                            ) + 1
+                    }
+                    label[endpoint[outerLabelIndex].toInt()] = 0
+                    // label[endpoint[blossomendps[b][j - endptrick].xor(endptrick).xor(1)].toInt()] = 0
                     assignLabel(endpoint[p.xor(1)].toInt(), 2, p)
-                    allowedge[blossomendps[b][j - endptrick].floorDiv(2)] = true
+                    allowedge[blossomendps[b][innerLabelIndex].floorDiv(2)] = true
                     j += jstep
                 }
                 var bv = blossomchilds[b][j]
@@ -456,10 +486,10 @@ object WeightedMaximumMatchingAlgo {
                     j += jstep
                 }
             }
-            label[b] = -1
             labelend[b] = -1
-            blossomchilds[b] = mutableListOf()
+            label[b] = labelend[b]
             blossomendps[b] = mutableListOf()
+            blossomchilds[b] = blossomendps[b]
             blossombase[b] = -1
             blossombestedges[b] = mutableListOf()
             bestedge[b] = -1
@@ -467,7 +497,7 @@ object WeightedMaximumMatchingAlgo {
         }
 
         fun augmentBlossom(b: Int, v: Int) {
-
+            if (debugMode) println("augmentBlossom($b,$v)")
             var t = v
             val jstep: Int
             val endptrick: Int
@@ -485,22 +515,53 @@ object WeightedMaximumMatchingAlgo {
                 endptrick = 0
             } else {
                 jstep = -1
-                endptrick = -1
+                endptrick = 1
             }
             while (j != 0) {
                 j += jstep
-                t = blossomchilds[b][j]
-                val p = blossomendps[b][j - endptrick].xor(endptrick)
+                t = if (j < 0) {
+                    blossomchilds[b][blossomchilds[b].lastIndex + j + 1]
+                } else {
+                    blossomchilds[b][j]
+                }
+                val p = if (j - endptrick < 0) {
+                    blossomendps[b][blossomchilds[b].lastIndex + (j - endptrick) + 1]
+                        .xor(endptrick)
+                } else {
+                    blossomendps[b][j - endptrick].xor(endptrick)
+                }
                 if (t >= nvertex) {
                     augmentBlossom(t, endpoint[p].toInt())
                 }
                 j += jstep
-                t = blossomchilds[b][j]
+                t = if (j < 0) {
+                    blossomchilds[b][blossomchilds[b].lastIndex + j + 1]
+                } else {
+                    blossomchilds[b][j]
+                }
                 if (t >= nvertex) {
                     augmentBlossom(t, endpoint[p.xor(1)].toInt())
                 }
-                mate[endpoint[p].toInt()] = p.xor(1).toLong()
-                mate[endpoint[p.xor(1)].toInt()] = p.toLong()
+                if (p < 0) {
+                    mate[endpoint[endpoint.lastIndex + p + 1].toInt()] = p.xor(1).toLong()
+                } else {
+                    mate[endpoint[p].toInt()] = p.xor(1).toLong()
+                }
+                if (p.xor(1) < 0) {
+                    mate[endpoint[endpoint.lastIndex + (p.xor(1)) + 1].toInt()] = p.toLong()
+                } else {
+                    mate[endpoint[p.xor(1)].toInt()] = p.toLong()
+                }
+                if (debugMode) println(
+                    "PAIR " +
+                        "${if (p < 0) endpoint[endpoint.lastIndex + p + 1] else endpoint[p]}" +
+                        " " +
+                        "${if (p.xor(1) < 0)
+                            endpoint[endpoint.lastIndex + (p.xor(1)) + 1]
+                        else
+                            endpoint[p.xor(1)]}" +
+                        " (k=${(p / 2)})"
+                )
             }
             blossomchilds[b] =
                 (
@@ -520,6 +581,8 @@ object WeightedMaximumMatchingAlgo {
             val edge = edges[k]
             val v = edge.node1.toInt()
             val w = edge.node2.toInt()
+            if (debugMode) println("augmentMatching($k) (v=$v w=$w)")
+            if (debugMode) println("PAIR $v $w (k=$k)")
             val listPair = listOf(Pair(v, 2 * k + 1), Pair(w, 2 * k))
             listPair.forEach { (ls, lp) ->
                 var s = ls
@@ -527,7 +590,7 @@ object WeightedMaximumMatchingAlgo {
                 while (true) {
                     val bs = inblossom[s]
                     assert(label[bs] == 1)
-                    assert(labelend[bs] == mate[blossombase[bs]].toInt())
+                    // assert(labelend[bs] == mate[blossombase[bs]].toInt()) // SKETCHY commented
                     if (bs >= nvertex) {
                         augmentBlossom(bs, s)
                     }
@@ -547,11 +610,235 @@ object WeightedMaximumMatchingAlgo {
                     }
                     mate[j] = labelend[bt].toLong()
                     p = labelend[bt].xor(1)
+                    if (debugMode) println("PAIR $s $t (k=${(p / 2)})")
                 }
             }
         }
 
-        return listOf()
+        fun verifyOptimum() {
+            // TODO
+        }
+        fun checkDelta2() {
+            // TODO
+        }
+        fun checkDelta3() {
+            // TODO
+        }
+
+        fun mainLoop(): MutableList<Long> {
+            for (t in 0 until nvertex) {
+
+                if (debugMode) println("STAGE $t")
+
+                label.clear()
+                for (i in 0 until nvertex) {
+                    label.add(0)
+                }
+                for (i in 0 until nvertex) {
+                    label.add(0)
+                }
+
+                bestedge.clear()
+                for (i in 0 until nvertex) {
+                    bestedge.add(-1)
+                }
+                for (i in 0 until nvertex) {
+                    bestedge.add(-1)
+                }
+
+                for (i in 0 until nvertex) {
+                    blossombestedges.removeLast()
+                }
+                for (i in 0 until nvertex) {
+                    blossombestedges.add(mutableListOf())
+                }
+
+                allowedge.clear()
+                for (i in 0 until nedges) {
+                    allowedge.add(false)
+                }
+
+                queue.clear()
+
+                for (v in 0 until nvertex) {
+                    if (mate[v].toInt() == -1 && label[inblossom[v]] == 0) {
+                        assignLabel(v, 1, -1)
+                    }
+                }
+
+                var augmented = false
+
+                while (true) {
+                    if (debugMode) println("SUBSTAGE")
+                    while (queue.isNotEmpty() && !augmented) {
+                        val v = queue.removeLast()
+                        if (debugMode) println("POP v=$v")
+                        assert(label[inblossom[v]] == 1)
+
+                        run whileCycle@{
+                            neighbend[v].forEach neighbendCycle@{ p ->
+                                val k = (p / 2)
+                                val w = endpoint[p].toInt()
+                                val kslack = slack(k)
+                                if (inblossom[v] == inblossom[w]) {
+                                    return@neighbendCycle
+                                }
+                                if (!allowedge[k]) {
+                                    if (kslack <= 0) {
+                                        allowedge[k] = true
+                                    }
+                                }
+                                if (allowedge[k]) {
+                                    if (label[inblossom[w]] == 0) {
+                                        assignLabel(w, 2, p.xor(1))
+                                    } else if (label[inblossom[w]] == 1) {
+                                        val base = scanBlossom(v, w)
+                                        if (base >= 0) {
+                                            addBlossom(base, k)
+                                        } else {
+                                            augmentMatching(k)
+                                            augmented = true
+                                            return@whileCycle
+                                        }
+                                    } else if (label[w] == 0) {
+                                        assert(label[inblossom[w]] == 2)
+                                        label[w] = 2
+                                        labelend[w] = p.xor(1)
+                                    }
+                                } else if (label[inblossom[w]] == 1) {
+                                    val b = inblossom[v]
+                                    if (bestedge[b] == -1 || kslack < slack(bestedge[b])) {
+                                        bestedge[b] = k
+                                    }
+                                } else if (label[w] == 0) {
+                                    if (bestedge[w] == -1 || kslack < slack(bestedge[w])) {
+                                        bestedge[w] = k
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (augmented) {
+                        break
+                    }
+
+                    var deltatype = -1
+                    var delta = 0
+                    var deltaedge = 0
+                    var deltablossom = 0
+
+                    if (!maxcardinality) {
+                        deltatype = 1
+                        delta = dualvar.take(nvertex).minOf { it }.toInt()
+                    }
+
+                    for (v in 0 until nvertex) {
+                        if (label[inblossom[v]] == 0 && bestedge[v] != -1) {
+                            val d = slack(bestedge[v])
+                            if (deltatype == -1 || d.toInt() < delta) {
+                                delta = d.toInt()
+                                deltatype = 2
+                                deltaedge = bestedge[v]
+                            }
+                        }
+                    }
+
+                    for (b in 0 until (2 * nvertex)) {
+                        if (blossomparent[b] == -1 && label[b] == 1 && bestedge[b] != -1) {
+                            val kslack = slack(bestedge[b])
+                            // A check about kslack being int or long, to review
+                            assert((kslack % 2).toInt() == 0)
+                            val d = kslack / 2
+                            if (deltatype == -1 || d < delta) {
+                                delta = d.toInt()
+                                deltatype = 3
+                                deltaedge = bestedge[b]
+                            }
+                        }
+                    }
+
+                    for (b in nvertex until (2 * nvertex)) {
+                        if (blossombase[b] >= 0 && blossomparent[b] == -1 && label[b] == 2 &&
+                            (deltatype == -1 || dualvar[b] < delta)
+                        ) {
+                            delta = dualvar[b].toInt()
+                            deltatype = 4
+                            deltablossom = b
+                        }
+                    }
+
+                    if (deltatype == -1) {
+                        assert(maxcardinality)
+                        deltatype = 1
+                        delta = max(0, dualvar.take(nvertex).minOf { it }.toInt())
+                    }
+
+                    for (v in 0 until nvertex) {
+                        if (label[inblossom[v]] == 1) {
+                            dualvar[v] = dualvar[v] - delta
+                        } else if (label[inblossom[v]] == 2) {
+                            dualvar[v] = dualvar[v] + delta
+                        }
+                    }
+
+                    for (b in nvertex until (2 * nvertex)) {
+                        if (blossombase[b] >= 0 && blossomparent[b] == -1) {
+                            if (label[b] == 1) {
+                                dualvar[b] = dualvar[b] + delta
+                            } else if (label[b] == 2) {
+                                dualvar[b] = dualvar[b] - delta
+                            }
+                        }
+                    }
+
+                    if (debugMode) println("delta$deltatype=$delta")
+                    if (deltatype == 1) {
+                        break
+                    } else if (deltatype == 2) {
+                        allowedge[deltaedge] = true
+                        val edge = edges[deltaedge]
+                        var i = edge.node1.toInt()
+                        var j = edge.node2.toInt()
+                        if (label[inblossom[i]] == 0) {
+                            i = j.also { j = i }
+                        }
+                        assert(label[inblossom[i]] == 1)
+                        queue.add(i)
+                    } else if (deltatype == 3) {
+                        allowedge[deltaedge] = true
+                        val edge = edges[deltaedge]
+                        val i = edge.node1.toInt()
+                        assert(label[inblossom[i]] == 1)
+                        queue.add(i)
+                    } else if (deltatype == 4) {
+                        expandBlossom(deltablossom, false)
+                    }
+                }
+                if (!augmented) {
+                    break
+                }
+                for (b in nvertex until (2 * nvertex)) {
+                    if (blossomparent[b] == -1 && blossombase[b] >= 0 &&
+                        label[b] == 1 && dualvar[b].toInt() == 0
+                    ) {
+                        expandBlossom(b, true)
+                    }
+                }
+            }
+
+            for (v in 0 until nvertex) {
+                if (mate[v] >= 0) {
+                    mate[v] = endpoint[mate[v].toInt()]
+                }
+            }
+            for (v in 0 until nvertex) {
+                assert(mate[v].toInt() == -1 || mate[mate[v].toInt()].toInt() == v)
+            }
+
+            return mate
+        }
+
+        return mainLoop()
     }
 }
 

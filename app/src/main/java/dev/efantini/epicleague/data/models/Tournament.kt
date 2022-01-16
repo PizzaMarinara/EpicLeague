@@ -1,5 +1,6 @@
 package dev.efantini.epicleague.data.models
 
+import dev.efantini.epicleague.domain.WeightedMaximumMatchingAlgo
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -59,7 +60,7 @@ data class Tournament(
         ).also { tournamentRound ->
             this.tournamentRounds.add(tournamentRound)
         }.also { tournamentRound ->
-            pairPlayers()?.let { tournamentRound.tournamentMatches.addAll(it) }
+            tournamentRound.tournamentMatches.addAll(pairPlayers())
         }
     }
 
@@ -70,42 +71,28 @@ data class Tournament(
                 .thenByDescending { it.getOpponentsWinPerc() }
                 .thenByDescending { it.getGameWinPerc() }
                 .thenByDescending { it.getOpponentsGameWinPerc() }
+                .thenBy { it.id }
                 .thenBy { it.player.target.lastName }
                 .thenBy { it.player.target.firstName }
         )
     }
 
-    private fun pairPlayers(): MutableList<TournamentMatch>? {
+    private fun pairPlayers(): MutableList<TournamentMatch> {
         val roundMatches = mutableListOf<TournamentMatch>()
-        val playersToPair = getStandings().toMutableList()
-        val playerIterator = playersToPair.iterator()
+        val standings = getStandings()
+        val edges = WeightedMaximumMatchingAlgo.getGraphEdges(standings)
+        val matching = WeightedMaximumMatchingAlgo.maxWeightMatching(edges)
 
-        while (playerIterator.hasNext()) {
-            val tournamentPlayer = playerIterator.next()
-            if (roundMatches.none { tournamentMatch ->
-                tournamentMatch.isPlayerPlaying(tournamentPlayer)
-            }
-            ) {
-                val possibleOpponents = playersToPair.filter { possibleOpponent ->
-                    possibleOpponent.player != tournamentPlayer.player &&
-                        !tournamentPlayer.getOpponentsPlayed().contains(possibleOpponent) &&
-                        roundMatches.none { tournamentMatch ->
-                            tournamentMatch.isPlayerPlaying(possibleOpponent)
-                        }
+        matching.forEachIndexed { index, match ->
+            roundMatches.add(
+                TournamentMatch().also { tournamentMatch ->
+                    tournamentMatch.matchNumber = index + 1
+                    tournamentMatch.tournamentPlayer1.target = standings[match.first.toInt()]
+                    tournamentMatch.tournamentPlayer2.target = standings[match.second.toInt()]
                 }
-                if (possibleOpponents.isEmpty() && playerIterator.hasNext()) {
-                    return null
-                }
-                roundMatches.add(
-                    TournamentMatch().also { tournamentMatch ->
-                        tournamentMatch.matchNumber = roundMatches.size + 1
-                        tournamentMatch.tournamentPlayer1.target = tournamentPlayer
-                        tournamentMatch.tournamentPlayer2.target = possibleOpponents.firstOrNull()
-                    }
-                )
-            }
-            playerIterator.remove()
+            )
         }
+
         return roundMatches
     }
 }
