@@ -6,7 +6,7 @@ import kotlin.math.min
 
 object WeightedMaximumMatchingAlgo {
 
-    val debugMode = true
+    val debugMode = false
 
     private fun weightTwoPlayers(
         highScore: Long,
@@ -468,8 +468,19 @@ object WeightedMaximumMatchingAlgo {
                 labelend[bv] = p
                 bestedge[bv] = -1
                 j += jstep
-                while (blossomchilds[b][j] != entrychild) {
-                    bv = blossomchilds[b][j]
+                while (
+                    if (j < 0) {
+                        blossomchilds[b][blossomchilds[b].lastIndex + j + 1]
+                    } else {
+                        blossomchilds[b][j]
+                    }
+                    != entrychild
+                ) {
+                    bv = if (j < 0) {
+                        blossomchilds[b][blossomchilds[b].lastIndex + j + 1]
+                    } else {
+                        blossomchilds[b][j]
+                    }
                     if (label[bv] == 1) {
                         j += jstep
                         continue
