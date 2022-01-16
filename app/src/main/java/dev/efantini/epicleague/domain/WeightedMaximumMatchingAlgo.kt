@@ -428,7 +428,7 @@ object WeightedMaximumMatchingAlgo {
                     jstep = -1
                     endptrick = 0
                 }
-                val p = labelend[b]
+                var p = labelend[b]
                 while (j != 0) {
                     if (p.xor(1) < 0) {
                         label[endpoint[endpoint.lastIndex + (p.xor(1)) + 1].toInt()] = 0
@@ -446,14 +446,24 @@ object WeightedMaximumMatchingAlgo {
                             ) + 1
                     }
                     label[endpoint[outerLabelIndex].toInt()] = 0
-                    // label[endpoint[blossomendps[b][j - endptrick].xor(endptrick).xor(1)].toInt()] = 0
-                    assignLabel(endpoint[p.xor(1)].toInt(), 2, p)
+                    if (p.xor(1) < 0) {
+                        assignLabel(endpoint[endpoint.lastIndex + (p.xor(1)) + 1].toInt(), 2, p)
+                    } else {
+                        assignLabel(endpoint[p.xor(1)].toInt(), 2, p)
+                    }
                     allowedge[blossomendps[b][innerLabelIndex].floorDiv(2)] = true
+                    j += jstep
+                    innerLabelIndex = j - endptrick
+                    if (innerLabelIndex < 0) {
+                        innerLabelIndex = blossomendps[b].lastIndex + (j - endptrick) + 1
+                    }
+                    p = blossomendps[b][innerLabelIndex].xor(endptrick)
+                    allowedge[p.floorDiv(2)] = true
                     j += jstep
                 }
                 var bv = blossomchilds[b][j]
-                label[endpoint[p.xor(1)].toInt()] = 2
                 label[bv] = 2
+                label[endpoint[p.xor(1)].toInt()] = label[bv]
                 labelend[endpoint[p.xor(1)].toInt()] = p
                 labelend[bv] = p
                 bestedge[bv] = -1
