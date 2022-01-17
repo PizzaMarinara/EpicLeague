@@ -7,3 +7,4 @@ Libraries used:
 - Moshi
 - Retrofit
 - Hilt
+- ObjectBox
