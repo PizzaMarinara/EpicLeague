@@ -1,10 +1,13 @@
 package dev.efantini.epicleague.data.models
 
-import dev.efantini.epicleague.domain.WeightedMaximumMatchingAlgo
+import dev.efantini.maximumweightedmatching.GraphEdge
+import dev.efantini.maximumweightedmatching.MaximumWeightedMatching
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
+import kotlin.math.max
+import kotlin.math.min
 
 @Entity
 data class Tournament(
@@ -80,8 +83,8 @@ data class Tournament(
     private fun pairPlayers(): MutableList<TournamentMatch> {
         val roundMatches = mutableListOf<TournamentMatch>()
         val standings = getStandings()
-        val edges = WeightedMaximumMatchingAlgo.getGraphEdges(standings)
-        val matching = WeightedMaximumMatchingAlgo.maxWeightMatching(edges)
+        val edges = getGraphEdges(standings)
+        val matching = MaximumWeightedMatching.maxWeightMatching(edges)
 
         matching.forEachIndexed { index, match ->
             roundMatches.add(
@@ -94,5 +97,55 @@ data class Tournament(
         }
 
         return roundMatches
+    }
+
+    private fun weightTwoPlayers(
+        highScore: Long,
+        player1: TournamentPlayer,
+        player2: TournamentPlayer
+    ): Long {
+
+        var weight: Long = 0
+
+        if (!player1.getOpponentsPlayed().contains(player2))
+            weight += quality(highScore, highScore) + 1
+
+        val best = max(player1.getTournamentPoints(), player2.getTournamentPoints()).toLong()
+        val worst = min(player1.getTournamentPoints(), player2.getTournamentPoints()).toLong()
+        val spread = best - worst
+        val closeness = highScore - spread
+        weight += quality(best, closeness)
+
+        return weight
+    }
+
+    private fun quality(importance: Long, closeness: Long): Long {
+        return (importance + 1) * (closeness + 1)
+    }
+
+    fun getGraphEdges(tournamentPlayers: List<TournamentPlayer>): List<GraphEdge> {
+
+        val edges = mutableListOf<GraphEdge>()
+
+        val highScore = tournamentPlayers.maxOf { tournamentPlayer ->
+            tournamentPlayer.getTournamentPoints()
+        }
+        tournamentPlayers.forEachIndexed { i, tournamentPlayer1 ->
+            for (j in i + 1 until tournamentPlayers.size) {
+                edges.add(
+                    GraphEdge(
+                        i.toLong(),
+                        j.toLong(),
+                        weightTwoPlayers(
+                            highScore.toLong(),
+                            tournamentPlayer1,
+                            tournamentPlayers[j]
+                        )
+                    )
+                )
+            }
+        }
+
+        return edges
     }
 }

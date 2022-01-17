@@ -98,6 +98,9 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:$hiltComposeVersion")
 
+    // Maximum Weight Matching library
+    implementation(project(mapOf("path" to ":maximumweightedmatching")))
+
     // Tests
     testImplementation("junit:junit:$junitVersion")
     implementation("androidx.test.ext:junit-ktx:$junitAndroidxVersion")

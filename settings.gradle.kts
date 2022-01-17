@@ -7,3 +7,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "EpicLeague"
 include(":app")
+include(":maximumweightedmatching")
