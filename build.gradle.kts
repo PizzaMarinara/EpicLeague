@@ -8,6 +8,7 @@ buildscript {
         google()
         gradlePluginPortal()
         mavenCentral()
+        maven("https://jitpack.io")
     }
     dependencies {
         classpath("com.android.tools.build:gradle:$gradlePluginVersion")
