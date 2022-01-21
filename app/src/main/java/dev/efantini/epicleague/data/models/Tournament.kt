@@ -19,7 +19,9 @@ data class Tournament(
     var winPoints: Int = 3,
     var drawPoints: Int = 1,
     var losePoints: Int = 0,
-    var floorWinPercentage: Double = 0.33
+    var floorWinPercentage: Double = 0.33,
+    var isOngoing: Boolean = false,
+    var isEnded: Boolean = false
 ) {
     @Backlink(to = "tournament")
     lateinit var tournamentRounds: ToMany<TournamentRound>
