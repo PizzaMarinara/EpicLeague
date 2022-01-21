@@ -5,12 +5,14 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
     primary = Dark4,
     primaryVariant = Dark3,
-    secondary = Dark2,
+    secondary = AccentDark1,
+    secondaryVariant = AccentDark2,
     background = Dark1,
     surface = Dark3,
     onPrimary = White,
@@ -23,7 +25,8 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Light4,
     primaryVariant = Light3,
-    secondary = Light2,
+    secondary = AccentLight1,
+    secondaryVariant = AccentLight2,
     background = Light1,
     surface = Light3,
     onPrimary = Black,
@@ -50,11 +53,17 @@ fun EpicLeagueTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
             color = Light3
         )
     }
+    CompositionLocalProvider(
+        LocalSpacing provides Spacing(),
+        LocalCardShape provides CardShape(),
+        LocalFontSize provides FontSize()
 
-    MaterialTheme(
-        colors = colors,
-        typography = EpicLeagueTypography,
-        shapes = Shapes,
-        content = content
-    )
+    ) {
+        MaterialTheme(
+            colors = colors,
+            typography = EpicLeagueTypography,
+            shapes = BasicShapes,
+            content = content
+        )
+    }
 }

@@ -26,8 +26,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.efantini.epicleague.R
 import dev.efantini.epicleague.data.models.Deck
-import dev.efantini.epicleague.ui.theme.DEFAULT_LIST_ELEMENT_SPACING
 import dev.efantini.epicleague.ui.theme.DEFAULT_SIDE_PADDING
+import dev.efantini.epicleague.ui.theme.LocalSpacing
 import dev.efantini.epicleague.ui.viewmodels.PlayerDetailViewModel
 
 @Composable
@@ -55,7 +55,7 @@ fun PlayerDetailContent(
                     Text(state.player.fullName)
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
+                        verticalArrangement = Arrangement.spacedBy(LocalSpacing.current.default),
                     ) {
                         items(state.decks) {
                             Box {

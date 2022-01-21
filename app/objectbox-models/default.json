@@ -173,7 +173,7 @@
     },
     {
       "id": "15:8723044628692732864",
-      "lastPropertyId": "12:3490471438270620257",
+      "lastPropertyId": "14:5431952629655428923",
       "name": "Tournament",
       "properties": [
         {
@@ -221,6 +221,16 @@
           "id": "12:3490471438270620257",
           "name": "floorWinPercentage",
           "type": 8
+        },
+        {
+          "id": "13:2745142388721765278",
+          "name": "isOngoing",
+          "type": 1
+        },
+        {
+          "id": "14:5431952629655428923",
+          "name": "isEnded",
+          "type": 1
         }
       ],
       "relations": []

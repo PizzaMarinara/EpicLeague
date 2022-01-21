@@ -22,10 +22,10 @@ import dev.efantini.epicleague.ui.states.PlayerItemUiState
 import dev.efantini.epicleague.ui.states.TournamentItemUiState
 import dev.efantini.epicleague.ui.states.TournamentPlayerItemUiState
 import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_HEIGHT
-import dev.efantini.epicleague.ui.theme.DEFAULT_CARD_SHAPE
 import dev.efantini.epicleague.ui.theme.Dark4
 import dev.efantini.epicleague.ui.theme.KarlaFontFamily
 import dev.efantini.epicleague.ui.theme.Light4
+import dev.efantini.epicleague.ui.theme.LocalCardShape
 
 @Composable
 fun PlayerCard(
@@ -34,7 +34,7 @@ fun PlayerCard(
     val isLightTheme = MaterialTheme.colors.isLight
     Card(
         elevation = DEFAULT_CARD_HEIGHT,
-        shape = DEFAULT_CARD_SHAPE,
+        shape = LocalCardShape.current.default,
         backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
     ) {
         Row(
@@ -60,7 +60,7 @@ fun DeckCard(
     val isLightTheme = MaterialTheme.colors.isLight
     Card(
         elevation = DEFAULT_CARD_HEIGHT,
-        shape = DEFAULT_CARD_SHAPE,
+        shape = LocalCardShape.current.default,
         backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
     ) {
         Row(
@@ -86,7 +86,7 @@ fun TournamentCard(
     val isLightTheme = MaterialTheme.colors.isLight
     Card(
         elevation = DEFAULT_CARD_HEIGHT,
-        shape = DEFAULT_CARD_SHAPE,
+        shape = LocalCardShape.current.default,
         backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
     ) {
         Row(
@@ -112,7 +112,7 @@ fun TournamentPlayerCard(
     val isLightTheme = MaterialTheme.colors.isLight
     Card(
         elevation = DEFAULT_CARD_HEIGHT,
-        shape = DEFAULT_CARD_SHAPE,
+        shape = LocalCardShape.current.default,
         backgroundColor = if (isLightTheme) { Light4 } else { Dark4 }
     ) {
         Row(
@@ -143,7 +143,7 @@ fun DialogCard(
     ) {
         Card(
             elevation = DEFAULT_CARD_HEIGHT,
-            shape = DEFAULT_CARD_SHAPE
+            shape = LocalCardShape.current.default
         ) {
             Surface(modifier = Modifier.padding(15.dp)) {
                 content()

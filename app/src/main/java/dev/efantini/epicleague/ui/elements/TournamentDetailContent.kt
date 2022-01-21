@@ -33,8 +33,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import dev.efantini.epicleague.R
 import dev.efantini.epicleague.data.models.Player
 import dev.efantini.epicleague.data.models.TournamentPlayer
-import dev.efantini.epicleague.ui.theme.DEFAULT_LIST_ELEMENT_SPACING
 import dev.efantini.epicleague.ui.theme.DEFAULT_SIDE_PADDING
+import dev.efantini.epicleague.ui.theme.LocalSpacing
 import dev.efantini.epicleague.ui.viewmodels.TournamentDetailViewModel
 
 @Composable
@@ -62,7 +62,7 @@ fun TournamentDetailContent(
                     Text(state.tournament.name)
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
+                        verticalArrangement = Arrangement.spacedBy(LocalSpacing.current.default),
                     ) {
                         items(state.tournamentPlayers) {
                             Box {
