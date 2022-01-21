@@ -41,8 +41,7 @@ import dev.efantini.epicleague.ui.viewmodels.TournamentDetailViewModel
 fun TournamentDetailContent(
     tournamentDetailViewModel: TournamentDetailViewModel = hiltViewModel()
 ) {
-    val tournament =
-        tournamentDetailViewModel.tournamentDetailContentUiState.tournament
+    val state = tournamentDetailViewModel.tournamentDetailContentUiState
     var isEditing by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -60,15 +59,12 @@ fun TournamentDetailContent(
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(tournament?.name ?: "")
+                    Text(state.tournament.name)
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
                     ) {
-                        items(
-                            tournamentDetailViewModel
-                                .tournamentDetailContentUiState.tournamentPlayers
-                        ) {
+                        items(state.tournamentPlayers) {
                             Box {
                                 TournamentPlayerCard(it)
                             }
@@ -87,9 +83,7 @@ fun TournamentDetailContent(
                             var expanded by rememberSaveable { mutableStateOf(false) }
                             var selectedPlayer: Player? by rememberSaveable { mutableStateOf(null) }
                             val openDialog = rememberSaveable { mutableStateOf(false) }
-                            val playersAvailable = tournamentDetailViewModel
-                                .tournamentDetailContentUiState
-                                .availablePlayers.isNotEmpty()
+                            val playersAvailable = state.availablePlayers.isNotEmpty()
                             val icon = if (expanded)
                                 Icons.Filled.KeyboardArrowUp
                             else
@@ -125,16 +119,14 @@ fun TournamentDetailContent(
                                 onDismissRequest = { expanded = false },
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-                                tournamentDetailViewModel
-                                    .tournamentDetailContentUiState
-                                    .availablePlayers.forEach { player ->
-                                        DropdownMenuItem(onClick = {
-                                            selectedPlayer = player
-                                            expanded = false
-                                        }) {
-                                            Text(text = player.fullName)
-                                        }
+                                state.availablePlayers.forEach { player ->
+                                    DropdownMenuItem(onClick = {
+                                        selectedPlayer = player
+                                        expanded = false
+                                    }) {
+                                        Text(text = player.fullName)
                                     }
+                                }
                             }
                             if (playersAvailable) {
                                 Button(
@@ -147,7 +139,6 @@ fun TournamentDetailContent(
                                                 listOf(
                                                     TournamentPlayer().also {
                                                         it.player.target = selectedPlayer
-                                                        it.tournament.target = tournament
                                                     }
                                                 )
                                             )

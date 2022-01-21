@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.efantini.epicleague.data.datasources.PlayerRepository
 import dev.efantini.epicleague.data.datasources.TournamentPlayerRepository
 import dev.efantini.epicleague.data.datasources.TournamentRepository
 import dev.efantini.epicleague.data.models.TournamentPlayer
@@ -18,10 +19,10 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class TournamentDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val tournamentRepository: TournamentRepository,
+    private val tournamentPlayerRepository: TournamentPlayerRepository,
+    private val playerRepository: PlayerRepository
 ) : ViewModel() {
-
-    private val tournamentRepository = TournamentRepository.getInstance()
-    private val tournamentPlayerRepository = TournamentPlayerRepository.getInstance()
 
     var tournamentDetailContentUiState by mutableStateOf(TournamentDetailUiState())
         private set
@@ -31,33 +32,36 @@ class TournamentDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             tournamentId?.let {
-                tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
-                    tournament = tournamentRepository.getElementById(tournamentId),
-                    tournamentPlayers = tournamentPlayerRepository
-                        .getPlayersForTournament(tournamentId)
-                        .map { TournamentPlayerItemUiState(it) },
-                    availablePlayers = tournamentRepository.getPlayersNotInTournament(tournamentId)
-                )
+                tournamentRepository.getElementById(tournamentId)?.let { tournament ->
+                    tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
+                        tournament = tournament,
+                    )
+                }
             }
+            getTournamentPlayers()
         }
     }
 
-    private fun getTournamentPlayers() {
-        viewModelScope.launch {
-            tournamentId?.let {
-                tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
-                    tournamentPlayers = tournamentPlayerRepository
-                        .getPlayersForTournament(tournamentId)
-                        .map { TournamentPlayerItemUiState(it) },
-                    availablePlayers = tournamentRepository.getPlayersNotInTournament(tournamentId)
-                )
-            }
-        }
+    private suspend fun getTournamentPlayers() {
+        tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
+            tournamentPlayers = tournamentPlayerRepository
+                .getPlayersForTournament(tournamentDetailContentUiState.tournament.id)
+                .map { TournamentPlayerItemUiState(it) },
+            availablePlayers = playerRepository
+                .getPlayersNotInTournament(tournamentDetailContentUiState.tournament.id)
+        )
     }
 
     fun putTournamentPlayers(items: List<TournamentPlayer>) {
         viewModelScope.launch {
-            tournamentPlayerRepository.putItems(items)
+            tournamentDetailContentUiState
+                .tournament.tournamentPlayers.addAll(items)
+            tournamentRepository.putItems(
+                listOf(
+                    tournamentDetailContentUiState
+                        .tournament
+                )
+            )
             getTournamentPlayers()
         }
     }

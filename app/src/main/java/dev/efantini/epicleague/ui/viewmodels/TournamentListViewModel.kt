@@ -14,9 +14,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class TournamentListViewModel @Inject constructor() : ViewModel() {
-
-    private val tournamentRepository = TournamentRepository.getInstance()
+class TournamentListViewModel @Inject constructor(
+    private val tournamentRepository: TournamentRepository
+) : ViewModel() {
 
     var tournamentListContentUiState by mutableStateOf(TournamentListUiState())
         private set

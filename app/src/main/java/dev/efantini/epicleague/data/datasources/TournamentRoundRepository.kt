@@ -1,15 +1,15 @@
 package dev.efantini.epicleague.data.datasources
 
 import dev.efantini.epicleague.data.ObjectBox
+import dev.efantini.epicleague.data.datasources.interfaces.TournamentRoundRepositoryInterface
 import dev.efantini.epicleague.data.models.TournamentRound
 import dev.efantini.epicleague.data.models.TournamentRound_
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TournamentRoundRepository private constructor(
+class TournamentRoundRepository constructor(
     private val defaultDispatcher: CoroutineDispatcher
-) : GenericRepositoryInterface<TournamentRound> {
+) : TournamentRoundRepositoryInterface {
 
     override suspend fun getItems(): List<TournamentRound> {
         return withContext(defaultDispatcher) {
@@ -36,16 +36,6 @@ class TournamentRoundRepository private constructor(
             ObjectBox.get().boxFor(TournamentRound::class.java)
                 .query(TournamentRound_.id.equal(id))
                 .build().findFirst()
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var INSTANCE: TournamentRoundRepository? = null
-        fun getInstance(
-            defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-        ): TournamentRoundRepository = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: TournamentRoundRepository(defaultDispatcher).also { INSTANCE = it }
         }
     }
 }

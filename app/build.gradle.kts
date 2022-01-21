@@ -20,7 +20,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("io.objectbox")
     id("dagger.hilt.android.plugin")
 }
 
@@ -42,6 +41,10 @@ android {
 
     buildTypes {
         release {
+            isMinifyEnabled = true
+            proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
+        }
+        debug {
             isMinifyEnabled = false
             proguardFiles("proguard-android-optimize.txt", "proguard-rules.pro")
         }
@@ -74,6 +77,9 @@ dependencies {
     implementation("com.google.android.material:material:1.5.0")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.core:core-splashscreen:1.0.0-beta01")
+
+    debugImplementation("io.objectbox:objectbox-android-objectbrowser:$objectboxVersion")
+    releaseImplementation("io.objectbox:objectbox-android:$objectboxVersion")
 
     // Compose
     implementation("androidx.compose.ui:ui:$composeVersion")
@@ -112,3 +118,5 @@ dependencies {
     testImplementation("io.objectbox:objectbox-windows:$objectboxVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesTestVersion")
 }
+
+apply(plugin = "io.objectbox")

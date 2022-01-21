@@ -39,7 +39,7 @@ fun TournamentListContent(
     tournamentListViewModel: TournamentListViewModel = hiltViewModel(),
     navController: NavController = rememberNavController()
 ) {
-
+    val state = tournamentListViewModel.tournamentListContentUiState
     var isEditing by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {
@@ -59,7 +59,7 @@ fun TournamentListContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
                 ) {
-                    items(tournamentListViewModel.tournamentListContentUiState.tournamentItems) {
+                    items(state.tournamentItems) {
                         Box(
                             Modifier.clickable(onClick = {
                                 navController.navigate(

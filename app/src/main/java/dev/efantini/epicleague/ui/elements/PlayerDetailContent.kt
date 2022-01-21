@@ -34,7 +34,7 @@ import dev.efantini.epicleague.ui.viewmodels.PlayerDetailViewModel
 fun PlayerDetailContent(
     playerDetailViewModel: PlayerDetailViewModel = hiltViewModel()
 ) {
-    val player = playerDetailViewModel.playerDetailContentUiState.player
+    val state = playerDetailViewModel.playerDetailContentUiState
     var isEditing by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -52,12 +52,12 @@ fun PlayerDetailContent(
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(player?.fullName ?: "")
+                    Text(state.player.fullName)
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
                     ) {
-                        items(playerDetailViewModel.playerDetailContentUiState.decks) {
+                        items(state.decks) {
                             Box {
                                 DeckCard(it)
                             }
@@ -88,9 +88,7 @@ fun PlayerDetailContent(
                                     isEditing = false
                                     playerDetailViewModel.putDecks(
                                         listOf(
-                                            Deck(
-                                                name = deckNameText.trim(),
-                                            ).also { it.player.target = player }
+                                            Deck(name = deckNameText.trim())
                                         )
                                     )
                                 }

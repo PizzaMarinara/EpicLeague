@@ -14,9 +14,9 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class PlayerListViewModel @Inject constructor() : ViewModel() {
-
-    private val playerRepository = PlayerRepository.getInstance()
+class PlayerListViewModel @Inject constructor(
+    private val playerRepository: PlayerRepository
+) : ViewModel() {
 
     var playerListContentUiState by mutableStateOf(PlayerListUiState())
         private set
@@ -39,13 +39,6 @@ class PlayerListViewModel @Inject constructor() : ViewModel() {
     fun putPlayers(items: List<Player>) {
         viewModelScope.launch {
             playerRepository.putItems(items)
-            getPlayers()
-        }
-    }
-
-    fun deletePlayers(items: List<Player>) {
-        viewModelScope.launch {
-            playerRepository.deleteItems(items)
             getPlayers()
         }
     }

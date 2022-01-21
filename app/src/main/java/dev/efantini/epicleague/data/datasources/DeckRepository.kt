@@ -1,16 +1,16 @@
 package dev.efantini.epicleague.data.datasources
 
 import dev.efantini.epicleague.data.ObjectBox
+import dev.efantini.epicleague.data.datasources.interfaces.DeckRepositoryInterface
 import dev.efantini.epicleague.data.models.Deck
 import dev.efantini.epicleague.data.models.Deck_
 import io.objectbox.query.OrderFlags
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DeckRepository private constructor(
+class DeckRepository constructor(
     private val defaultDispatcher: CoroutineDispatcher
-) : GenericRepositoryInterface<Deck> {
+) : DeckRepositoryInterface {
 
     override suspend fun getItems(): List<Deck> {
         return withContext(defaultDispatcher) {
@@ -42,22 +42,12 @@ class DeckRepository private constructor(
         }
     }
 
-    suspend fun getDecksForPlayer(playerId: Long): List<Deck> {
+    override suspend fun getDecksForPlayer(playerId: Long): List<Deck> {
         return withContext(defaultDispatcher) {
             ObjectBox.get().boxFor(Deck::class.java)
                 .query(Deck_.playerId.equal(playerId))
                 .order(Deck_.name)
                 .build().find()
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var INSTANCE: DeckRepository? = null
-        fun getInstance(
-            defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-        ): DeckRepository = INSTANCE ?: synchronized(this) {
-            INSTANCE ?: DeckRepository(defaultDispatcher).also { INSTANCE = it }
         }
     }
 }

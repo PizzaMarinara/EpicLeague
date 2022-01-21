@@ -1,4 +1,4 @@
-package dev.efantini.epicleague.data.datasources
+package dev.efantini.epicleague.data.datasources.interfaces
 
 interface GenericRepositoryInterface<T> {
     suspend fun getItems(): List<T>

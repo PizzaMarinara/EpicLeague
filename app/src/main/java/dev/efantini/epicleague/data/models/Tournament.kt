@@ -62,8 +62,8 @@ data class Tournament(
             turnNumber = tournamentRounds.size + 1
         ).also { tournamentRound ->
             this.tournamentRounds.add(tournamentRound)
-        }.also { tournamentRound ->
-            tournamentRound.tournamentMatches.addAll(pairPlayers())
+        }.apply {
+            this.tournamentMatches.addAll(pairPlayers())
         }
     }
 
@@ -88,10 +88,10 @@ data class Tournament(
 
         matching.forEachIndexed { index, match ->
             roundMatches.add(
-                TournamentMatch().also { tournamentMatch ->
-                    tournamentMatch.matchNumber = index + 1
-                    tournamentMatch.tournamentPlayer1.target = standings[match.first.toInt()]
-                    tournamentMatch.tournamentPlayer2.target = standings[match.second.toInt()]
+                TournamentMatch().apply {
+                    this.matchNumber = index + 1
+                    this.tournamentPlayer1.target = standings[match.first.toInt()]
+                    this.tournamentPlayer2.target = standings[match.second.toInt()]
                 }
             )
         }

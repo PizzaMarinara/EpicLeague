@@ -18,10 +18,9 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class PlayerDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val playerRepository: PlayerRepository,
+    private val deckRepository: DeckRepository
 ) : ViewModel() {
-
-    private val playerRepository = PlayerRepository.getInstance()
-    private val deckRepository = DeckRepository.getInstance()
 
     var playerDetailContentUiState by mutableStateOf(PlayerDetailUiState())
         private set
@@ -31,27 +30,27 @@ class PlayerDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             playerId?.let {
-                playerDetailContentUiState = playerDetailContentUiState.copy(
-                    player = playerRepository.getElementById(playerId),
-                    decks = deckRepository.getDecksForPlayer(playerId).map { DeckItemUiState(it) }
-                )
+                playerRepository.getElementById(playerId)?.let { player ->
+                    playerDetailContentUiState = playerDetailContentUiState.copy(
+                        player = player
+                    )
+                    getDecks()
+                }
             }
         }
     }
 
-    private fun getDecks() {
-        viewModelScope.launch {
-            playerId?.let {
-                playerDetailContentUiState = playerDetailContentUiState.copy(
-                    decks = deckRepository.getDecksForPlayer(playerId).map { DeckItemUiState(it) }
-                )
-            }
-        }
+    private suspend fun getDecks() {
+        playerDetailContentUiState = playerDetailContentUiState.copy(
+            decks = deckRepository.getDecksForPlayer(playerDetailContentUiState.player.id)
+                .map { DeckItemUiState(it) }
+        )
     }
 
     fun putDecks(items: List<Deck>) {
         viewModelScope.launch {
-            deckRepository.putItems(items)
+            playerDetailContentUiState.player.decks.addAll(items)
+            playerRepository.putItems(listOf(playerDetailContentUiState.player))
             getDecks()
         }
     }

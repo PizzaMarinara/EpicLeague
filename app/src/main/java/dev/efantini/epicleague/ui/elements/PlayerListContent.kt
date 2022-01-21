@@ -41,7 +41,7 @@ fun PlayerListContent(
     playerListViewModel: PlayerListViewModel = hiltViewModel(),
     navController: NavController = rememberNavController()
 ) {
-
+    val state = playerListViewModel.playerListContentUiState
     var isEditing by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {
@@ -61,7 +61,7 @@ fun PlayerListContent(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(DEFAULT_LIST_ELEMENT_SPACING),
                 ) {
-                    items(playerListViewModel.playerListContentUiState.playerItems) {
+                    items(state.playerItems) {
                         Box(
                             Modifier.clickable(onClick = {
                                 navController.navigate(
