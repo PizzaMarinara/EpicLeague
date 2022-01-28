@@ -1,5 +1,6 @@
 package dev.efantini.epicleague.data.models
 
+import dev.efantini.epicleague.domain.PairingsUseCase
 import dev.efantini.maximumweightedmatching.GraphEdge
 import dev.efantini.maximumweightedmatching.MaximumWeightedMatching
 import io.objectbox.annotation.Backlink
@@ -40,24 +41,15 @@ data class Tournament(
                 }
             }
         }
-        fun getMaxNumberOfRounds(players: Int): Int = when (players) {
-            in 3..4 -> 2
-            in 5..8 -> 3
-            in 9..16 -> 4
-            in 17..32 -> 5
-            in 33..64 -> 6
-            in 65..128 -> 7
-            in 129..212 -> 8
-            in 213..385 -> 9
-            else -> 10
-        }
+        fun getMaxNumberOfRounds(players: Int): Int =
+            PairingsUseCase.getNumberOfRounds(players)
     }
 
-    private fun isStarted(): Boolean {
+    fun isStarted(): Boolean {
         return tournamentRounds.isNotEmpty()
     }
 
-    private fun isEnded(): Boolean {
+    fun isEnded(): Boolean {
         val calculatedRounds = if (numberOfRounds == null) {
             getMaxNumberOfRounds(tournamentPlayers.size)
         } else {
