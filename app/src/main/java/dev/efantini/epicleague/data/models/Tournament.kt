@@ -19,9 +19,8 @@ data class Tournament(
     var winPoints: Int = 3,
     var drawPoints: Int = 1,
     var losePoints: Int = 0,
-    var floorWinPercentage: Double = 0.33,
-    var isOngoing: Boolean = false,
-    var isEnded: Boolean = false
+    var numberOfRounds: Int? = null,
+    var floorWinPercentage: Double = 0.33
 ) {
     @Backlink(to = "tournament")
     lateinit var tournamentRounds: ToMany<TournamentRound>
@@ -54,9 +53,22 @@ data class Tournament(
         }
     }
 
+    private fun isStarted(): Boolean {
+        return tournamentRounds.isNotEmpty()
+    }
+
+    private fun isEnded(): Boolean {
+        val calculatedRounds = if (numberOfRounds == null) {
+            getNumberOfRounds(tournamentPlayers.size)
+        } else {
+            numberOfRounds
+        }
+        return calculatedRounds == null || tournamentRounds.size >= calculatedRounds
+    }
+
     fun pairNewRound(): TournamentRound? {
-        val calculatedRounds = getNumberOfRounds(tournamentPlayers.size)
-        if (calculatedRounds == null || calculatedRounds <= tournamentRounds.size) {
+
+        if (isEnded()) {
             return null
         }
 
