@@ -347,6 +347,15 @@ class Pairings32Test {
         // printStandings()
         assert(torneo.tournamentRounds.size > 0)
         printStandingsShort()
+        assert(
+            torneo.tournamentPlayers.map {
+                it.getOpponentsPlayed().distinctBy { oppo ->
+                    oppo.id
+                }.size == 5
+            }.all { true }
+        )
+
+        printEndMatches()
     }
 
     private fun printStandings() {
@@ -371,6 +380,23 @@ class Pairings32Test {
                     " " + it.getGameWinPerc() +
                     " " + it.getOpponentsGameWinPerc()
             )
+        }
+    }
+
+    private fun printEndMatches() {
+        torneo.tournamentRounds.forEach { tournamentRound ->
+            assert(tournamentRound.tournamentMatches.size > 0)
+            tournamentRound.tournamentMatches.forEach { tournamentMatch ->
+                val player1 = tournamentMatch.tournamentPlayer1.target
+                    ?.player?.target?.fullName ?: "BYE"
+                val player2 = tournamentMatch.tournamentPlayer2.target
+                    ?.player?.target?.fullName ?: "BYE"
+                println("---")
+                println("Round: " + tournamentRound.turnNumber)
+                println("Match: " + tournamentMatch.matchNumber)
+                println("$player1 VS $player2")
+                println("---")
+            }
         }
     }
 }

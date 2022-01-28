@@ -249,4 +249,21 @@ class Pairings16Test {
             )
         }
     }
+
+    private fun printEndMatches() {
+        torneo.tournamentRounds.forEach { tournamentRound ->
+            assert(tournamentRound.tournamentMatches.size > 0)
+            tournamentRound.tournamentMatches.forEach { tournamentMatch ->
+                val player1 = tournamentMatch.tournamentPlayer1.target
+                    ?.player?.target?.fullName ?: "BYE"
+                val player2 = tournamentMatch.tournamentPlayer2.target
+                    ?.player?.target?.fullName ?: "BYE"
+                println("---")
+                println("Round: " + tournamentRound.turnNumber)
+                println("Match: " + tournamentMatch.matchNumber)
+                println("$player1 VS $player2")
+                println("---")
+            }
+        }
+    }
 }
