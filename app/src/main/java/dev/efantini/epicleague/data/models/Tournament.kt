@@ -40,8 +40,8 @@ data class Tournament(
                 }
             }
         }
-        fun getNumberOfRounds(players: Int): Int? = when (players) {
-            in 2..4 -> 2
+        fun getMaxNumberOfRounds(players: Int): Int = when (players) {
+            in 3..4 -> 2
             in 5..8 -> 3
             in 9..16 -> 4
             in 17..32 -> 5
@@ -49,7 +49,7 @@ data class Tournament(
             in 65..128 -> 7
             in 129..212 -> 8
             in 213..385 -> 9
-            else -> null
+            else -> 10
         }
     }
 
@@ -59,11 +59,11 @@ data class Tournament(
 
     private fun isEnded(): Boolean {
         val calculatedRounds = if (numberOfRounds == null) {
-            getNumberOfRounds(tournamentPlayers.size)
+            getMaxNumberOfRounds(tournamentPlayers.size)
         } else {
-            numberOfRounds
+            min(numberOfRounds ?: 0, getMaxNumberOfRounds(tournamentPlayers.size))
         }
-        return calculatedRounds == null || tournamentRounds.size >= calculatedRounds
+        return tournamentRounds.size >= calculatedRounds
     }
 
     fun pairNewRound(): TournamentRound? {
