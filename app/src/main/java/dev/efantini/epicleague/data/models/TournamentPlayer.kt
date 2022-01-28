@@ -3,6 +3,8 @@ package dev.efantini.epicleague.data.models
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 @Entity
 data class TournamentPlayer(
@@ -49,7 +51,7 @@ data class TournamentPlayer(
         return(
             getTournamentPoints().toDouble() /
                 (getMatches().size * tournament.target.winPoints).toDouble()
-            )
+            ).roundTo(3)
     }
 
     fun getOpponentsWinPerc(): Double {
@@ -60,7 +62,7 @@ data class TournamentPlayer(
                 tournament.target.floorWinPercentage
             else
                 it.getWinPercentage()
-        }.average()
+        }.average().times(100).roundTo(1)
     }
 
     fun getGameWinPerc(): Double {
@@ -80,6 +82,7 @@ data class TournamentPlayer(
             0.0
         else
             (gamesWonTotalPair.first.toDouble() / gamesWonTotalPair.second.toDouble())
+                .times(100).roundTo(1)
     }
 
     fun getOpponentsGameWinPerc(): Double {
@@ -88,6 +91,15 @@ data class TournamentPlayer(
                 tournament.target.floorWinPercentage
             else
                 it.getGameWinPerc()
-        }.average()
+        }.average().roundTo(1)
+    }
+
+    private fun Double.roundTo(numFractionDigits: Int): Double {
+        val factor = 10.0.pow(numFractionDigits.toDouble())
+        return if (this.isNaN()) {
+            0.0
+        } else {
+            (this * factor).roundToInt() / factor
+        }
     }
 }
