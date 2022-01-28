@@ -194,10 +194,12 @@ class Pairings8Test {
                     ?.player?.target?.fullName ?: "BYE"
                 val player2 = tournamentMatch.tournamentPlayer2.target
                     ?.player?.target?.fullName ?: "BYE"
+                val player1P = tournamentMatch.player1Points
+                val player2P = tournamentMatch.player2Points
                 println("---")
                 println("Round: " + tournamentRound.turnNumber)
                 println("Match: " + tournamentMatch.matchNumber)
-                println("$player1 VS $player2")
+                println("$player1 ($player1P) VS $player2 ($player2P)")
                 println("---")
             }
         }
