@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-
-    <color name="dark1">#FF212121</color>
-    <color name="dark2">#FF323232</color>
-    <color name="dark3">#FF0D7377</color>
-    <color name="dark4">#FF14FFEC</color>
-
-    <color name="light1">#FFE3FDFD</color>
-    <color name="light2">#FFCBF1F5</color>
-    <color name="light3">#FFA6E3E9</color>
-    <color name="light4">#FF71C9CE</color>
 
 </resources>

@@ -2,6 +2,16 @@ package dev.efantini.epicleague.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val LightPrimary = Color(0xFFE84A5F)
+val LightPrimaryV = Color(0xFFB00136)
+val LightSecondary = Color(0xFF14FFEC)
+val LightSecondaryV = Color(0xFF0D7377)
+
+val Palette1 = Color(0xFF2A363B)
+val Palette2 = Color(0xFFE84A5F)
+val Palette3 = Color(0xFFFF847C)
+val Palette4 = Color(0xFFFECEA8)
+
 val Dark1 = Color(0xFF212121)
 val Dark2 = Color(0xFF323232)
 val Dark3 = Color(0xFF0D7377)
@@ -34,3 +44,5 @@ val GreyH = Color(0xFF222222)
 val Black = Color(0xFF000000)
 
 val Transparent = Color(0x00FFFFFF)
+
+val SuperRed = Color(0xFFFF0000)

@@ -14,7 +14,7 @@ private val DarkColorPalette = darkColors(
     secondary = AccentDark1,
     secondaryVariant = AccentDark2,
     background = Dark1,
-    surface = Dark3,
+    surface = AccentDark1,
     onPrimary = White,
     onSecondary = White,
     onBackground = White,
@@ -23,13 +23,13 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Light4,
-    primaryVariant = Light3,
-    secondary = AccentLight1,
-    secondaryVariant = AccentLight2,
-    background = Light1,
-    surface = Light3,
-    onPrimary = Black,
+    primary = LightPrimary,
+    primaryVariant = LightPrimaryV,
+    secondary = LightSecondary,
+    secondaryVariant = LightSecondaryV,
+    background = Palette1,
+    surface = Palette1,
+    onPrimary = White,
     onSecondary = Black,
     onBackground = Black,
     onSurface = Black,
@@ -46,11 +46,11 @@ fun EpicLeagueTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
     val systemUiController = rememberSystemUiController()
     if (darkTheme) {
         systemUiController.setSystemBarsColor(
-            color = Dark3
+            color = Dark2
         )
     } else {
         systemUiController.setSystemBarsColor(
-            color = Light3
+            color = LightPrimaryV
         )
     }
     CompositionLocalProvider(
