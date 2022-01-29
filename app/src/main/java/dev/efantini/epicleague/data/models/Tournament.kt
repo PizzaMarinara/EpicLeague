@@ -97,7 +97,12 @@ data class Tournament(
                 TournamentMatch().apply {
                     this.matchNumber = index + 1
                     this.tournamentPlayer1.target = standings[match.first.toInt()]
-                    this.tournamentPlayer2.target = standings[match.second.toInt()]
+                    // Check for a bye. Usually it's a -1 value
+                    if (match.second.toInt() < 0 || match.second.toInt() >= standings.size) {
+                        this.tournamentPlayer2.target = null
+                    } else {
+                        this.tournamentPlayer2.target = standings[match.second.toInt()]
+                    }
                 }
             )
         }
