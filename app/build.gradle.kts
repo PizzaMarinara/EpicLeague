@@ -10,7 +10,7 @@ val junitVersion by extra { "4.13.2" }
 val junitAndroidxVersion by extra { "1.1.3" }
 val kotlinVersion: String by rootProject.extra
 val materialVersion by extra { "1.0.0-alpha02" }
-val maximumWeightedMatching by extra { "0.1.3" }
+val maximumWeightedMatching by extra { "0.1.5" }
 val moshiVersion by extra { "1.13.0" }
 val navigationVersion by extra { "2.4.0-rc01" }
 val objectboxVersion: String by rootProject.extra
