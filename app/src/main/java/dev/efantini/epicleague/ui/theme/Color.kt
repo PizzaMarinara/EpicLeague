@@ -7,6 +7,10 @@ val LightPrimaryV = Color(0xFFB00136)
 val LightSecondary = Color(0xFF14FFEC)
 val LightSecondaryV = Color(0xFF0D7377)
 
+val BackgroundGrey1 = Color(0xFF2A363B)
+val BackgroundGrey2 = Color(0xFF252A34)
+val BackgroundGrey3 = Color(0xFF383E42)
+
 val Palette1 = Color(0xFF2A363B)
 val Palette2 = Color(0xFFE84A5F)
 val Palette3 = Color(0xFFFF847C)

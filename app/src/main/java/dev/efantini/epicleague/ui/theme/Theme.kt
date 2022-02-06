@@ -27,12 +27,12 @@ private val LightColorPalette = lightColors(
     primaryVariant = LightPrimaryV,
     secondary = LightSecondary,
     secondaryVariant = LightSecondaryV,
-    background = Palette1,
-    surface = Palette1,
+    background = BackgroundGrey2,
+    surface = BackgroundGrey3,
     onPrimary = White,
     onSecondary = Black,
-    onBackground = Black,
-    onSurface = Black,
+    onBackground = White,
+    onSurface = White,
 )
 
 @Composable
