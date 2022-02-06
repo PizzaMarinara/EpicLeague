@@ -1,6 +1,6 @@
-val accompanistVersion by extra { "0.20.3" }
-val composeCompilerVersion by extra { "1.2.0-alpha01" }
-val composeVersion by extra { "1.2.0-alpha01" }
+val accompanistVersion by extra { "0.24.1-alpha" }
+val composeCompilerVersion by extra { "1.2.0-alpha02" }
+val composeVersion by extra { "1.2.0-alpha02" }
 val coreTestingVersion by extra { "2.1.0" }
 val coroutinesTestVersion by extra { "1.6.0" }
 val gradlePluginVersion: String by rootProject.extra
@@ -12,7 +12,7 @@ val kotlinVersion: String by rootProject.extra
 val materialVersion by extra { "1.0.0-alpha02" }
 val maximumWeightedMatching by extra { "0.1.5" }
 val moshiVersion by extra { "1.13.0" }
-val navigationVersion by extra { "2.4.0-rc01" }
+val navigationVersion by extra { "2.4.0" }
 val objectboxVersion: String by rootProject.extra
 val retrofitVersion by extra { "2.9.0" }
 
