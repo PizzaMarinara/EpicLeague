@@ -59,7 +59,11 @@ fun TournamentDetailContent(
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(state.tournament.name)
+                    if (state.tournament.name.isEmpty()) {
+                        Text(stringResource(id = R.string.new_tournament))
+                    } else {
+                        Text(state.tournament.name)
+                    }
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(LocalSpacing.current.default),
@@ -94,7 +98,9 @@ fun TournamentDetailContent(
                                 onValueChange = { },
                                 enabled = false,
                                 modifier = if (playersAvailable) {
-                                    Modifier.fillMaxWidth().clickable { expanded = !expanded }
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .clickable { expanded = !expanded }
                                 } else {
                                     Modifier.fillMaxWidth()
                                 },

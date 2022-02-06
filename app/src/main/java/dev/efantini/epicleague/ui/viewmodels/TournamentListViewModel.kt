@@ -29,9 +29,20 @@ class TournamentListViewModel @Inject constructor(
         viewModelScope.launch {
             val items = tournamentRepository.getItems()
             tournamentListContentUiState = tournamentListContentUiState.copy(
-                tournamentItems = items.map {
-                    TournamentItemUiState(tournament = it)
-                }
+                ongoingTournaments = items
+                    .filter {
+                        !it.isEnded()
+                    }
+                    .map {
+                        TournamentItemUiState(tournament = it)
+                    },
+                completedTournaments = items
+                    .filter {
+                        it.isEnded()
+                    }
+                    .map {
+                        TournamentItemUiState(tournament = it)
+                    }
             )
         }
     }

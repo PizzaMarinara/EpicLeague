@@ -6,9 +6,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dev.efantini.epicleague.ui.elements.TournamentDetailContent
 import dev.efantini.epicleague.ui.elements.TournamentListContent
 
+@ExperimentalPagerApi
 fun NavGraphBuilder.tournamentNavHost(navController: NavController) {
     navigation(
         startDestination = NavigationItem.TournamentList.fullRoute,

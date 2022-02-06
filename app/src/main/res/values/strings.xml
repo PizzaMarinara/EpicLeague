@@ -7,6 +7,7 @@
     <string name="player_lastName">Surname</string>
     <string name="deck_name">Deck name</string>
     <string name="tournament_name">Tournament name</string>
+    <string name="new_tournament">New Tournament</string>
 
     <string name="coming_soon">Section coming soon!</string>
 
