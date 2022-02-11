@@ -135,7 +135,7 @@
     },
     {
       "id": "6:4286753030626160758",
-      "lastPropertyId": "5:7613436238672796577",
+      "lastPropertyId": "7:4244284431957688273",
       "name": "TournamentPlayer",
       "properties": [
         {
@@ -167,6 +167,16 @@
           "type": 11,
           "flags": 520,
           "relationTarget": "Tournament"
+        },
+        {
+          "id": "6:5108542908759692862",
+          "name": "isActive",
+          "type": 1
+        },
+        {
+          "id": "7:4244284431957688273",
+          "name": "customPoints",
+          "type": 5
         }
       ],
       "relations": []

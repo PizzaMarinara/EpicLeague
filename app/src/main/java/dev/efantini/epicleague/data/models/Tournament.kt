@@ -88,7 +88,7 @@ data class Tournament(
 
     private fun pairPlayers(): MutableList<TournamentMatch> {
         val roundMatches = mutableListOf<TournamentMatch>()
-        val standings = getStandings()
+        val standings = getActivePlayers()
         val edges = getGraphEdges(standings)
         val matching = MaximumWeightedMatching.maxWeightMatching(edges)
 
@@ -108,6 +108,11 @@ data class Tournament(
         }
 
         return roundMatches
+    }
+
+    private fun getActivePlayers(): List<TournamentPlayer> {
+
+        return getStandings().filter { it.isActive }
     }
 
     private fun weightTwoPlayers(
@@ -134,7 +139,7 @@ data class Tournament(
         return (importance + 1) * (closeness + 1)
     }
 
-    fun getGraphEdges(tournamentPlayers: List<TournamentPlayer>): List<GraphEdge> {
+    private fun getGraphEdges(tournamentPlayers: List<TournamentPlayer>): List<GraphEdge> {
 
         val edges = mutableListOf<GraphEdge>()
 

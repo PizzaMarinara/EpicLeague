@@ -8,7 +8,9 @@ import kotlin.math.roundToInt
 
 @Entity
 data class TournamentPlayer(
-    @Id var id: Long = 0
+    @Id var id: Long = 0,
+    var isActive: Boolean = true,
+    var customPoints: Int = 0
 ) {
     lateinit var player: ToOne<Player>
     lateinit var deck: ToOne<Deck>
@@ -45,13 +47,6 @@ data class TournamentPlayer(
             }
         }
         return accumulatedPoints
-    }
-
-    fun getWinPercentage(): Double {
-        return(
-            getTournamentPoints().toDouble() /
-                (getMatches().size * tournament.target.winPoints).toDouble()
-            ).roundTo(3)
     }
 
     fun getOpponentsWinPerc(): Double {
@@ -92,6 +87,13 @@ data class TournamentPlayer(
             else
                 it.getGameWinPerc()
         }.average().roundTo(1)
+    }
+
+    private fun getWinPercentage(): Double {
+        return(
+            getTournamentPoints().toDouble() /
+                (getMatches().size * tournament.target.winPoints).toDouble()
+            ).roundTo(3)
     }
 
     private fun Double.roundTo(numFractionDigits: Int): Double {
