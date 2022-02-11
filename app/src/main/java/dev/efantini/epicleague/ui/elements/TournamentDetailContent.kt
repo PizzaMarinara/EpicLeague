@@ -59,11 +59,31 @@ fun TournamentDetailContent(
                     .padding(DEFAULT_SIDE_PADDING)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (state.tournament.name.isEmpty()) {
-                        Text(stringResource(id = R.string.new_tournament))
-                    } else {
-                        Text(state.tournament.name)
+                    val newTournamentString = stringResource(id = R.string.new_tournament)
+                    var tournamentName = state.tournament.name.ifBlank {
+                        newTournamentString
                     }
+
+                    OutlinedTextField(
+                        value = tournamentName,
+                        onValueChange = {
+                            tournamentName = it
+                            if (tournamentName.isBlank()) {
+                                tournamentDetailViewModel
+                                    .saveTournamentName(newTournamentString)
+                            } else {
+                                tournamentDetailViewModel
+                                    .saveTournamentName(tournamentName.trim())
+                            }
+                        },
+                        singleLine = true
+                    )
+                    Text(
+                        text = state.tournament.name.ifBlank {
+                            newTournamentString
+                        }
+                    )
+                    // CustomTextField()
                     LazyColumn(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(LocalSpacing.current.default),

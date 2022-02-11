@@ -65,4 +65,18 @@ class TournamentDetailViewModel @Inject constructor(
             getTournamentPlayers()
         }
     }
+
+    fun saveTournamentName(name: String) {
+        viewModelScope.launch {
+            tournamentDetailContentUiState.tournament.name = name
+            tournamentRepository.putItems(listOf(tournamentDetailContentUiState.tournament))
+            tournamentRepository
+                .getElementById(tournamentDetailContentUiState.tournament.id)
+                ?.let { tournament ->
+                    tournamentDetailContentUiState = tournamentDetailContentUiState.copy(
+                        tournament = tournament
+                    )
+                }
+        }
+    }
 }
