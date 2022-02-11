@@ -11,6 +11,7 @@ val junitAndroidxVersion by extra { "1.1.3" }
 val kotlinVersion: String by rootProject.extra
 val materialVersion by extra { "1.0.0-alpha02" }
 val maximumWeightedMatching by extra { "0.1.5" }
+val mockitoVersion by extra { "4.3.1" }
 val moshiVersion by extra { "1.13.0" }
 val navigationVersion by extra { "2.4.0" }
 val objectboxVersion: String by rootProject.extra
@@ -112,6 +113,8 @@ dependencies {
 
     // Tests
     testImplementation("junit:junit:$junitVersion")
+    testImplementation("org.mockito:mockito-core:$mockitoVersion")
+    testImplementation("org.mockito:mockito-inline:4.3.1")
     implementation("androidx.test.ext:junit-ktx:$junitAndroidxVersion")
     androidTestImplementation("androidx.test.ext:junit:$junitAndroidxVersion")
     testImplementation("androidx.arch.core:core-testing:$coreTestingVersion")

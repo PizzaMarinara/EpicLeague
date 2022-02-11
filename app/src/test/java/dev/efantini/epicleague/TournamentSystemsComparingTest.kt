@@ -210,7 +210,7 @@ class TournamentSystemsComparingTest {
         rankingsLists.forEach { rankList ->
             rankList.forEach { tournamentResult ->
                 val previousResult = finalResult.firstOrNull {
-                    it.first.id == tournamentResult.first.id
+                    it.first.player.targetId == tournamentResult.first.player.targetId
                 }
                 if (previousResult == null) {
                     finalResult.add(tournamentResult)
@@ -231,7 +231,7 @@ class TournamentSystemsComparingTest {
                     rankingsLists.filter {
                         it.find {
                             pair ->
-                            pair.first.id == finalScore.first.id
+                            pair.first.player.targetId == finalScore.first.player.targetId
                         } != null
                     }.size.toString().padStart(2, '0') + ")" +
                     " "
@@ -249,7 +249,7 @@ class TournamentSystemsComparingTest {
     ) {
         rankingsLists.forEachIndexed { index, ranking ->
             val myRank = ranking.firstOrNull { tournamentResult ->
-                tournamentResult.first.id == player.id
+                tournamentResult.first.player.targetId == player.player.targetId
             }
             if (myRank != null) {
                 print(
